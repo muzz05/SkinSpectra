@@ -1,8 +1,9 @@
 # ==============================================================================
 # SkinSpectra -- Requirements
-# NLP Layer     (train_nlp_layer.py      + test_nlp_layer.py)
-# Calc Layer    (train_calc_layer.py     + test_calc_layer.py)
-# Layering Layer(train_layering_layer.py + test_layering_layer.py)
+# NLP Layer      (train_nlp_layer.py       + test_nlp_layer.py)
+# Calc Layer     (train_calc_layer.py      + test_calc_layer.py)
+# Layering Layer (train_layering_layer.py  + test_layering_layer.py)
+# LLM Layer      (llm_layer.py             + test_llm_layer.py)
 # Python 3.11
 # ==============================================================================
 
@@ -30,6 +31,10 @@ joblib>=1.3.0
 
 # -- Machine Learning (Layering Layer) -----------------------------------------
 lightgbm>=4.3.0
+
+# -- LLM Layer (Gemini) --------------------------------------------------------
+google-genai>=1.0.0
+python-dotenv>=1.0.0
 
 # -- Utilities -----------------------------------------------------------------
 tqdm>=4.66.0

@@ -1,0 +1,174 @@
+{
+  "individual": {
+    "success": true,
+    "report": {
+      "report_type": "individual_product",
+      "product_name": "The Ordinary Niacinamide 10% + Zinc 1%",
+      "overall_score": 84.5,
+      "grade": "B+",
+      "headline": "Excellent choice for your oily, acne-prone skin!",
+      "summary": "This product scores a great 84.5/100, earning a B+ for its strong compatibility with your oily, acne-prone skin. It's well-suited to address your concerns like acne, pores, and hyperpigmentation.",
+      "skin_profile_fit": {
+        "rating": "Excellent",
+        "explanation": "This formula is particularly well-suited for your oily, acne-prone skin, helping to regulate sebum and minimize the appearance of pores and post-acne marks."
+      },
+      "key_benefits": [
+        {
+          "benefit": "Regulates sebum production",
+          "ingredient": "Zinc PCA",
+          "relevance_to_user": "Directly addresses your oily skin type."
+        },
+        {
+          "benefit": "Reduces acne breakouts",
+          "ingredient": "Niacinamide",
+          "relevance_to_user": "Targets your primary concern of acne."
+        },
+        {
+          "benefit": "Minimizes pore appearance",
+          "ingredient": "Salicylic Acid",
+          "relevance_to_user": "Helps with your concern regarding pores."
+        },
+        {
+          "benefit": "Improves hyperpigmentation",
+          "ingredient": "Niacinamide",
+          "relevance_to_user": "Assists in fading post-acne marks and evening skin tone."
+        }
+      ],
+      "key_concerns": [
+        {
+          "concern": "Potential initial purging",
+          "ingredient": "Salicylic Acid",
+          "severity": "medium"
+        },
+        {
+          "concern": "Risk of dryness if overused",
+          "ingredient": "Salicylic Acid",
+          "severity": "low"
+        }
+      ],
+      "warnings": [],
+      "ingredient_highlights": [
+        {
+          "ingredient": "Niacinamide",
+          "role": "Anti-inflammatory, pore minimizer, hyperpigmentation reducer",
+          "verdict": "star"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "role": "Sebum regulator, antimicrobial",
+          "verdict": "star"
+        },
+        {
+          "ingredient": "Salicylic Acid",
+          "role": "Exfoliant, pore cleanser",
+          "verdict": "good"
+        },
+        {
+          "ingredient": "Hyaluronic Acid",
+          "role": "Hydrator",
+          "verdict": "good"
+        },
+        {
+          "ingredient": "Glycerin",
+          "role": "Humectant",
+          "verdict": "good"
+        }
+      ],
+      "routine_integration": "Apply a few drops after cleansing with your CeraVe cleanser, morning and/or evening. Follow with your SPF 50 in the morning. Start with once daily to assess tolerance.",
+      "usage_tips": [
+        "Start by using it 3-4 times a week, then gradually increase to daily if your skin tolerates it well.",
+        "Apply to clean, dry skin before heavier creams or oils.",
+        "A small amount is enough; 2-3 drops should cover your face.",
+        "Always follow with your SPF 50 during the day, as some ingredients can increase sun sensitivity.",
+        "If you experience initial purging (small breakouts), continue use for 2-4 weeks as skin adjusts."
+      ],
+      "alternatives_note": "",
+      "pregnancy_note": "",
+      "climate_note": "In your humid tropical climate, this lightweight serum will feel comfortable without adding extra oiliness.",
+      "confidence_note": ""
+    },
+    "score": 84.5,
+    "latency_ms": 10181.8,
+    "usage": {
+      "prompt_tokens": 1126,
+      "completion_tokens": 902,
+      "total_tokens": 3138
+    },
+    "error": ""
+  },
+  "layering": {
+    "success": true,
+    "report": {
+      "report_type": "product_layering",
+      "product_a_name": "Paula's Choice BHA Exfoliant",
+      "product_b_name": "The Ordinary Niacinamide Serum",
+      "overall_score": 91.0,
+      "grade": "A",
+      "headline": "Excellent synergy for clear, balanced, and radiant skin!",
+      "summary": "This is a fantastic pairing for your combination skin, especially targeting acne, pores, and dullness. The BHA exfoliates and clears, while Niacinamide calms and refines, working together beautifully to improve your complexion.",
+      "compatibility_verdict": "Safe to Layer",
+      "application_protocol": {
+        "order": "Apply Paula's Choice BHA Exfoliant first, as it's a lighter exfoliant that needs direct contact with skin, followed by The Ordinary Niacinamide Serum.",
+        "wait_time": "Wait 5 minutes",
+        "time_of_day": "Both",
+        "steps": [
+          "Cleanse your face thoroughly.",
+          "Apply Paula's Choice BHA Exfoliant to a cotton pad and sweep across your face.",
+          "Wait 5 minutes for your skin's pH to stabilize.",
+          "Apply The Ordinary Niacinamide Serum evenly to your face.",
+          "Follow with your preferred moisturizer and SPF (AM) or occlusive (PM)."
+        ]
+      },
+      "synergies": [
+        {
+          "pair": "Salicylic Acid + Niacinamide",
+          "benefit": "Enhanced oil control, pore refinement, and reduction of post-acne marks.",
+          "impact_on_user": "This combination will actively target your acne and large pores, while also helping to fade any lingering redness from past breakouts, leading to a clearer, smoother complexion."
+        }
+      ],
+      "conflicts": [
+        {
+          "pair": "BHA + Niacinamide (if overused)",
+          "issue": "Potential for dryness or irritation",
+          "severity": "medium",
+          "solution": "Start by using this combination 2-3 times a week, gradually increasing frequency as your skin tolerates it. Listen to your skin and reduce usage if dryness occurs."
+        }
+      ],
+      "skin_type_assessment": "For your combination skin, this duo is excellent. The BHA tackles oiliness and congestion in the T-zone, while Niacinamide helps balance oil production and strengthen the skin barrier across your face.",
+      "concern_coverage": [
+        {
+          "concern": "acne",
+          "addressed_by": "Salicylic Acid, Niacinamide",
+          "effectiveness": "well"
+        },
+        {
+          "concern": "pores",
+          "addressed_by": "Salicylic Acid, Niacinamide",
+          "effectiveness": "well"
+        },
+        {
+          "concern": "dullness",
+          "addressed_by": "Salicylic Acid, Niacinamide",
+          "effectiveness": "well"
+        }
+      ],
+      "warnings": [],
+      "pro_tips": [
+        "Start slowly: Introduce this combination 2-3 times a week, especially if you're new to BHA, to allow your skin to adjust.",
+        "Hydrate well: Always follow with a good moisturizer to support your skin barrier, especially with active ingredients.",
+        "Sun protection is non-negotiable: BHA can increase sun sensitivity, so apply a broad-spectrum SPF 30+ every morning.",
+        "Observe your skin: Pay attention to how your skin responds. If you notice excessive dryness or irritation, reduce frequency."
+      ],
+      "pregnancy_note": "",
+      "alternative_approach": ""
+    },
+    "score": 91.0,
+    "latency_ms": 8789.3,
+    "usage": {
+      "prompt_tokens": 1269,
+      "completion_tokens": 850,
+      "total_tokens": 3249
+    },
+    "error": ""
+  }
+}
