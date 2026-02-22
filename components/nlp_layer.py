@@ -508,16 +508,17 @@ class INCIMapper:
             meta = json.load(f)
         corpus = meta["corpus"]
 
-        alias_path = Path(cfg["lookup_path"])
+        alias_path = model_dir / "alias_lookup.json"
         with open(alias_path, "r", encoding="utf-8") as f:
             alias_map = json.load(f)
 
         embeddings = None
+        index_bin  = str(model_dir / "faiss_index.bin")
         if meta.get("faiss") and FAISS_AVAILABLE:
-            index = faiss.read_index(cfg["index_path"])
+            index = faiss.read_index(index_bin)
             index.nprobe = cfg["faiss_nprobe"]
         else:
-            npy = cfg["index_path"].replace(".bin", ".npy")
+            npy = index_bin.replace(".bin", ".npy")
             embeddings = np.load(npy)
             index = embeddings
 

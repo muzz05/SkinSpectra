@@ -1,40 +1,40 @@
 # ==============================================================================
-# SkinSpectra -- Requirements
-# NLP Layer      (train_nlp_layer.py       + test_nlp_layer.py)
-# Calc Layer     (train_calc_layer.py      + test_calc_layer.py)
-# Layering Layer (train_layering_layer.py  + test_layering_layer.py)
-# LLM Layer      (llm_layer.py             + test_llm_layer.py)
-# Python 3.11
+# SkinSpectra — Requirements
+# Python 3.11+
 # ==============================================================================
 
-# -- Core Data -----------------------------------------------------------------
+# -- Core ----------------------------------------------------------------------
 numpy>=1.26.0
 pandas>=2.2.0
 
-# -- NLP / Embeddings ----------------------------------------------------------
+# -- NLP Layer -----------------------------------------------------------------
 sentence-transformers>=3.0.0
 transformers[torch]>=4.40.0
 torch>=2.2.0
 tokenizers>=0.19.0
 accelerate>=1.1.0
-
-# -- Fuzzy Matching ------------------------------------------------------------
 rapidfuzz>=3.6.0
-
-# -- Vector Search -------------------------------------------------------------
 faiss-cpu>=1.8.0
 
-# -- Machine Learning (Calculation Layer) --------------------------------------
+# -- Calc Layer ----------------------------------------------------------------
 xgboost>=2.0.0
 scikit-learn>=1.4.0
 joblib>=1.3.0
 
-# -- Machine Learning (Layering Layer) -----------------------------------------
+# -- Layering Layer ------------------------------------------------------------
 lightgbm>=4.3.0
 
-# -- LLM Layer (Gemini) --------------------------------------------------------
-google-genai>=1.0.0
-python-dotenv>=1.0.0
+# -- LLM Layer -----------------------------------------------------------------
+google-genai>=1.64.0
+
+# -- API -----------------------------------------------------------------------
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.9.0,<3.0.0
+
+# -- Test script ---------------------------------------------------------------
+requests>=2.31.0
 
 # -- Utilities -----------------------------------------------------------------
 tqdm>=4.66.0
+python-dotenv>=1.0.0
