@@ -8,7 +8,7 @@ Pass --llm to enable LLM tests (server must have GEMINI_API_KEY set).
 Usage
 -----
     # Start server first:
-    python api.py --port 4000
+    python api.py --port 8000
 
     # Run all tests (no LLM):
     python test_api.py
@@ -17,7 +17,7 @@ Usage
     python test_api.py --llm
 
     # Custom server URL:
-    python test_api.py --url http://localhost:4000
+    python test_api.py --url http://localhost:8000
 
     # Run specific tests only:
     python test_api.py --only T12 T23 T24
@@ -100,7 +100,7 @@ def _hdr(tid: str, method: str, path: str, desc: str):
     print(f"{'─'*70}")
 
 # globals set by CLI
-BASE = "http://localhost:4000"
+BASE = "http://localhost:8000"
 LLM  = False
 
 
@@ -673,7 +673,7 @@ def t35():
 def main():
     global BASE, LLM
     parser = argparse.ArgumentParser(description="SkinSpectra API Mock Test Suite")
-    parser.add_argument("--url",  default="http://localhost:4000")
+    parser.add_argument("--url",  default="http://localhost:8000")
     parser.add_argument("--llm",  action="store_true",
                         help="Enable LLM calls (requires GEMINI_API_KEY on server)")
     parser.add_argument("--only", nargs="*", metavar="TXX",
