@@ -891,7 +891,7 @@ if __name__ == "__main__":
                         format="%(asctime)s [%(levelname)s] %(message)s")
 
     parser = argparse.ArgumentParser(description="SkinSpectra OCR Handler")
-    parser.add_argument("image", nargs="?", default="test_ingredient_label.jpg",
+    parser.add_argument("image", nargs="?", default="../testing/dry_moisturizer.jpg",
                         help="Path to ingredient label image")
     parser.add_argument("--debug", action="store_true",
                         help="Show raw OCR text")
