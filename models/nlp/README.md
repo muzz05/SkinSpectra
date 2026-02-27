@@ -5,35 +5,35 @@ tags:
 - feature-extraction
 - dense
 - generated_from_trainer
-- dataset_size:6610
+- dataset_size:6766
 - loss:MultipleNegativesRankingLoss
 base_model: sentence-transformers/all-MiniLM-L6-v2
 widget:
-- source_sentence: Laminaria
+- source_sentence: Lactobionic Acid
   sentences:
-  - Milk Acid
-  - 9-beta-D-Ribofuranosyladenine
-  - Laminaria Extract
-- source_sentence: Pentylene Glycol
+  - Purified Water
+  - Lactobionic Acid
+  - Acetyl Octapeptide
+- source_sentence: Prifrac 2960
   sentences:
-  - Ronacare NaPCA
-  - Sodium PCA
-  - Pentylene Glycol
-- source_sentence: Ellagic Acid
-  sentences:
-  - DC 246 Fluid
-  - 2,3,7,8-Tetrahydroxy[1]benzopyrano-acid
-  - Laminaria Extract
-- source_sentence: Rockweed Extract
-  sentences:
-  - Fucus Vesiculosus Extract
-  - Nicotinamide
-  - Purox B
-- source_sentence: Stearic Acid
-  sentences:
-  - Bifida Ferment Lysate
   - n-Octadecanoic Acid
-  - Crodamol IPM
+  - Syn-Ake
+  - Beeswax
+- source_sentence: Flaxseed Oil
+  sentences:
+  - Linseed Oil
+  - Granactive Retinoid
+  - Adenosine
+- source_sentence: Yeast Ferment
+  sentences:
+  - D-Panthenol
+  - Fermented Yeast Extract
+  - Evonik Chamomile
+- source_sentence: Phytosphingosine
+  sentences:
+  - Ascorbic Acid
+  - Pomegranate Extract
+  - Tetrahydrosphingosine
 pipeline_tag: sentence-similarity
 library_name: sentence-transformers
 metrics:
@@ -65,10 +65,10 @@ model-index:
       type: inci_eval
     metrics:
     - type: cosine_accuracy@1
-      value: 0.775
+      value: 0.8
       name: Cosine Accuracy@1
     - type: cosine_accuracy@3
-      value: 0.925
+      value: 0.975
       name: Cosine Accuracy@3
     - type: cosine_accuracy@5
       value: 0.975
@@ -77,10 +77,10 @@ model-index:
       value: 0.975
       name: Cosine Accuracy@10
     - type: cosine_precision@1
-      value: 0.775
+      value: 0.8
       name: Cosine Precision@1
     - type: cosine_precision@3
-      value: 0.3083333333333333
+      value: 0.325
       name: Cosine Precision@3
     - type: cosine_precision@5
       value: 0.195
@@ -89,10 +89,10 @@ model-index:
       value: 0.0975
       name: Cosine Precision@10
     - type: cosine_recall@1
-      value: 0.775
+      value: 0.8
       name: Cosine Recall@1
     - type: cosine_recall@3
-      value: 0.925
+      value: 0.975
       name: Cosine Recall@3
     - type: cosine_recall@5
       value: 0.975
@@ -101,19 +101,19 @@ model-index:
       value: 0.975
       name: Cosine Recall@10
     - type: cosine_ndcg@1
-      value: 0.775
+      value: 0.8
       name: Cosine Ndcg@1
     - type: cosine_ndcg@5
-      value: 0.8824356157188727
+      value: 0.9071394630357187
       name: Cosine Ndcg@5
     - type: cosine_mrr@1
-      value: 0.775
+      value: 0.8
       name: Cosine Mrr@1
     - type: cosine_mrr@5
-      value: 0.8516666666666668
+      value: 0.8833333333333332
       name: Cosine Mrr@5
     - type: cosine_map@100
-      value: 0.8539393939393939
+      value: 0.8845238095238095
       name: Cosine Map@100
 ---
 
@@ -167,9 +167,9 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("sentence_transformers_model_id")
 # Run inference
 sentences = [
-    'Stearic Acid',
-    'n-Octadecanoic Acid',
-    'Crodamol IPM',
+    'Phytosphingosine',
+    'Tetrahydrosphingosine',
+    'Ascorbic Acid',
 ]
 embeddings = model.encode(sentences)
 print(embeddings.shape)
@@ -178,9 +178,9 @@ print(embeddings.shape)
 # Get the similarity scores for the embeddings
 similarities = model.similarity(embeddings, embeddings)
 print(similarities)
-# tensor([[1.0000, 0.6196, 0.3140],
-#         [0.6196, 1.0000, 0.2803],
-#         [0.3140, 0.2803, 1.0000]])
+# tensor([[1.0000, 0.6606, 0.3366],
+#         [0.6606, 1.0000, 0.3018],
+#         [0.3366, 0.3018, 1.0000]])
 ```
 
 <!--
@@ -218,23 +218,23 @@ You can finetune this model on your own dataset.
 
 | Metric              | Value      |
 |:--------------------|:-----------|
-| cosine_accuracy@1   | 0.775      |
-| cosine_accuracy@3   | 0.925      |
+| cosine_accuracy@1   | 0.8        |
+| cosine_accuracy@3   | 0.975      |
 | cosine_accuracy@5   | 0.975      |
 | cosine_accuracy@10  | 0.975      |
-| cosine_precision@1  | 0.775      |
-| cosine_precision@3  | 0.3083     |
+| cosine_precision@1  | 0.8        |
+| cosine_precision@3  | 0.325      |
 | cosine_precision@5  | 0.195      |
 | cosine_precision@10 | 0.0975     |
-| cosine_recall@1     | 0.775      |
-| cosine_recall@3     | 0.925      |
+| cosine_recall@1     | 0.8        |
+| cosine_recall@3     | 0.975      |
 | cosine_recall@5     | 0.975      |
 | cosine_recall@10    | 0.975      |
-| cosine_ndcg@1       | 0.775      |
-| **cosine_ndcg@5**   | **0.8824** |
-| cosine_mrr@1        | 0.775      |
-| cosine_mrr@5        | 0.8517     |
-| cosine_map@100      | 0.8539     |
+| cosine_ndcg@1       | 0.8        |
+| **cosine_ndcg@5**   | **0.9071** |
+| cosine_mrr@1        | 0.8        |
+| cosine_mrr@5        | 0.8833     |
+| cosine_map@100      | 0.8845     |
 
 <!--
 ## Bias, Risks and Limitations
@@ -254,19 +254,19 @@ You can finetune this model on your own dataset.
 
 #### Unnamed Dataset
 
-* Size: 6,610 training samples
+* Size: 6,766 training samples
 * Columns: <code>sentence_0</code> and <code>sentence_1</code>
 * Approximate statistics based on the first 1000 samples:
   |         | sentence_0                                                                       | sentence_1                                                                       |
   |:--------|:---------------------------------------------------------------------------------|:---------------------------------------------------------------------------------|
   | type    | string                                                                           | string                                                                           |
-  | details | <ul><li>min: 3 tokens</li><li>mean: 7.62 tokens</li><li>max: 26 tokens</li></ul> | <ul><li>min: 3 tokens</li><li>mean: 6.94 tokens</li><li>max: 26 tokens</li></ul> |
+  | details | <ul><li>min: 3 tokens</li><li>mean: 7.65 tokens</li><li>max: 28 tokens</li></ul> | <ul><li>min: 3 tokens</li><li>mean: 6.96 tokens</li><li>max: 32 tokens</li></ul> |
 * Samples:
-  | sentence_0                        | sentence_1                       |
-  |:----------------------------------|:---------------------------------|
-  | <code>TEA</code>                  | <code>Triethanolamine USP</code> |
-  | <code>Rosemary Antioxidant</code> | <code>Rosemary Oil</code>        |
-  | <code>Karite Butter</code>        | <code>Shea Butter</code>         |
+  | sentence_0                   | sentence_1                             |
+  |:-----------------------------|:---------------------------------------|
+  | <code>Petroleum Jelly</code> | <code>Unipetrol</code>                 |
+  | <code>Arlasolve DMI</code>   | <code>Isosorbide Dimethyl Ether</code> |
+  | <code>Curcuminoid</code>     | <code>Turmeric Extract</code>          |
 * Loss: [<code>MultipleNegativesRankingLoss</code>](https://sbert.net/docs/package_reference/sentence_transformer/losses.html#multiplenegativesrankingloss) with these parameters:
   ```json
   {
@@ -389,22 +389,20 @@ You can finetune this model on your own dataset.
 </details>
 
 ### Training Logs
-| Epoch  | Step | Training Loss | inci_eval_cosine_ndcg@5 |
-|:------:|:----:|:-------------:|:-----------------------:|
-| 0.4808 | 50   | -             | 0.6320                  |
-| 0.9615 | 100  | -             | 0.7362                  |
-| 1.0    | 104  | -             | 0.7628                  |
-| 1.4423 | 150  | -             | 0.7701                  |
-| 1.9231 | 200  | -             | 0.8054                  |
-| 2.0    | 208  | -             | 0.8179                  |
-| 2.4038 | 250  | -             | 0.8104                  |
-| 2.8846 | 300  | -             | 0.8539                  |
-| 3.0    | 312  | -             | 0.8635                  |
-| 3.3654 | 350  | -             | 0.8668                  |
-| 3.8462 | 400  | -             | 0.8668                  |
-| 4.0    | 416  | -             | 0.8668                  |
-| 4.3269 | 450  | -             | 0.8760                  |
-| 4.8077 | 500  | 1.9552        | 0.8824                  |
+| Epoch  | Step | inci_eval_cosine_ndcg@5 |
+|:------:|:----:|:-----------------------:|
+| 0.4717 | 50   | 0.6193                  |
+| 0.9434 | 100  | 0.7105                  |
+| 1.0    | 106  | 0.7112                  |
+| 1.4151 | 150  | 0.7572                  |
+| 1.8868 | 200  | 0.7991                  |
+| 2.0    | 212  | 0.8008                  |
+| 2.3585 | 250  | 0.8254                  |
+| 2.8302 | 300  | 0.8603                  |
+| 3.0    | 318  | 0.8631                  |
+| 3.3019 | 350  | 0.8696                  |
+| 3.7736 | 400  | 0.8854                  |
+| 4.0    | 424  | 0.9071                  |
 
 
 ### Framework Versions

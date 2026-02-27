@@ -265,7 +265,13 @@
     "Disodium Cocoamphodiacetate",
     "Hydroxyacetophenone",
     "1,2-Hexanediol",
-    "Pentylene Glycol"
+    "Pentylene Glycol",
+    "Ceteareth-20",
+    "Behentrimonium Methosulfate",
+    "Polyglyceryl-3 Diisostearate",
+    "Sodium Lauroyl Lactylate",
+    "Potassium Phosphate",
+    "Dipotassium Phosphate"
   ],
   "dim": 384,
   "faiss": true
