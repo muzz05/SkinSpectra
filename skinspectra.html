@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkinSpectra — AI Skincare Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+  :root {
+    --sage:       #8AAF87;
+    --sage-light: #B8D4B5;
+    --sage-dark:  #5A7D57;
+    --cream:      #FAF7F2;
+    --cream-dark: #F0EBE1;
+    --ivory:      #FFFDF9;
+    --charcoal:   #2C2C2C;
+    --warm-grey:  #6B6560;
+    --blush:      #E8A598;
+    --gold:       #C9A96E;
+    --mint:       #A8D5C2;
+    --lavender:   #C4B5D4;
+    --danger:     #D4756B;
+    --success:    #7AAF8A;
+    --warning:    #D4A76A;
+    --card-bg:    #FFFFFF;
+    --border:     #E8E2D9;
+    --shadow:     0 4px 24px rgba(44,44,44,0.07);
+    --shadow-lg:  0 12px 48px rgba(44,44,44,0.12);
+    --radius:     16px;
+    --radius-sm:  10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(138,175,135,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(201,169,110,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(168,213,194,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header {
+    background: rgba(255,253,249,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(90,125,87,0.3);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span { color: var(--sage-dark); }
+
+  nav { display: flex; gap: 8px; }
+
+  .nav-pill {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    color: var(--warm-grey);
+  }
+
+  .nav-pill:hover { background: var(--cream-dark); color: var(--charcoal); }
+  .nav-pill.active { background: var(--sage); color: white; box-shadow: 0 4px 12px rgba(138,175,135,0.35); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(138,175,135,0.15);
+    border: 1px solid rgba(138,175,135,0.3);
+    color: var(--sage-dark);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    margin-bottom: 18px;
+    color: var(--charcoal);
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--sage-dark), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--warm-grey);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 440px;
+  }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.25s;
+    box-shadow: 0 6px 20px rgba(90,125,87,0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(90,125,87,0.45); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--charcoal);
+    border: 1.5px solid var(--border);
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline:hover { border-color: var(--sage); color: var(--sage-dark); background: rgba(138,175,135,0.06); }
+
+  /* ── HERO VISUAL ── */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: var(--shadow-lg);
+    width: 340px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .hc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .hc-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, rgba(138,175,135,0.2), rgba(168,213,194,0.3));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--sage-dark);
+  }
+
+  .hc-title { font-weight: 700; font-size: 14px; }
+  .hc-sub { font-size: 11px; color: var(--warm-grey); }
+
+  .score-ring {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 16px 0;
+    gap: 4px;
+  }
+
+  .ring-wrap { position: relative; width: 100px; height: 100px; }
+
+  .ring-wrap svg { transform: rotate(-90deg); }
+
+  circle.ring-bg { fill: none; stroke: var(--cream-dark); stroke-width: 8; }
+  circle.ring-fill {
+    fill: none;
+    stroke: url(#scoreGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 251.2;
+    stroke-dashoffset: 50;
+    transition: stroke-dashoffset 1s ease;
+  }
+
+  .ring-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring-score { font-size: 22px; font-weight: 800; color: var(--charcoal); }
+  .ring-grade { font-size: 11px; font-weight: 600; color: var(--sage-dark); }
+
+  .hc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+
+  .hc-tag {
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .tag-good { background: rgba(122,175,138,0.15); color: #3d7a51; }
+  .tag-warn { background: rgba(212,167,106,0.15); color: #a07030; }
+  .tag-bad  { background: rgba(212,117,107,0.15); color: #b04038; }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+  .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .si-sage { background: rgba(138,175,135,0.15); color: var(--sage-dark); }
+  .si-gold { background: rgba(201,169,110,0.15); color: #a07030; }
+  .si-mint { background: rgba(168,213,194,0.15); color: #2e8a6a; }
+  .si-blush { background: rgba(232,165,152,0.15); color: #b05040; }
+
+  .stat-num { font-size: 22px; font-weight: 800; color: var(--charcoal); }
+  .stat-label { font-size: 12px; color: var(--warm-grey); font-weight: 500; }
+
+  /* ── MAIN SECTION ── */
+  .main-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .section-sub {
+    color: var(--warm-grey);
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+
+  /* ── TAB SYSTEM ── */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    background: var(--cream-dark);
+    border-radius: 14px;
+    padding: 5px;
+    width: fit-content;
+    margin-bottom: 32px;
+  }
+
+  .tab-btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--warm-grey);
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab-btn.active {
+    background: var(--card-bg);
+    color: var(--charcoal);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FORM LAYOUT ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .form-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-card-title i { color: var(--sage-dark); }
+
+  .form-card-sub {
+    font-size: 12px;
+    color: var(--warm-grey);
+    margin-bottom: 20px;
+  }
+
+  .field { margin-bottom: 18px; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--warm-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    background: var(--ivory);
+    color: var(--charcoal);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(138,175,135,0.15);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--warm-grey);
+    pointer-events: none;
+    font-size: 11px;
+  }
+
+  /* ── CHIP SELECTOR ── */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .chip {
+    padding: 6px 13px;
+    border-radius: 50px;
+    border: 1.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--ivory);
+    color: var(--warm-grey);
+    user-select: none;
+  }
+
+  .chip:hover { border-color: var(--sage-light); color: var(--sage-dark); }
+  .chip.selected { background: var(--sage); border-color: var(--sage); color: white; }
+
+  /* ── FILE UPLOAD ZONE ── */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 36px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: rgba(255,253,249,0.6);
+    position: relative;
+  }
+
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--sage);
+    background: rgba(138,175,135,0.06);
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon {
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, rgba(138,175,135,0.15), rgba(168,213,194,0.2));
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+    color: var(--sage-dark);
+  }
+
+  .upload-title { font-weight: 700; font-size: 14px; margin-bottom: 5px; }
+  .upload-sub { font-size: 12px; color: var(--warm-grey); }
+  .upload-sub span { color: var(--sage-dark); font-weight: 600; cursor: pointer; }
+
+  .upload-preview {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    background: rgba(138,175,135,0.08);
+    border: 1px solid rgba(138,175,135,0.25);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 12px;
+  }
+
+  .upload-preview.visible { display: flex; }
+  .preview-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+  .preview-name { font-size: 12px; font-weight: 600; flex: 1; }
+  .preview-remove {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(212,117,107,0.15);
+    color: var(--danger);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+
+  .preview-remove:hover { background: var(--danger); color: white; }
+
+  /* ── INGREDIENT PILL INPUT ── */
+  .ing-pill-box {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--ivory);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.2s;
+  }
+  .ing-pill-box:focus-within { border-color: var(--sage); }
+
+  .ing-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 34px;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+
+  .ing-empty-msg {
+    font-size: 12px;
+    color: var(--warm-grey);
+    font-style: italic;
+    padding: 6px 2px;
+  }
+
+  .ing-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(138,175,135,0.12);
+    border: 1px solid rgba(138,175,135,0.3);
+    color: var(--charcoal);
+    padding: 4px 8px 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    max-width: 220px;
+    animation: fadeUp 0.15s ease;
+  }
+
+  .ing-pill-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 175px;
+  }
+
+  .ing-pill-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--warm-grey);
+    font-size: 10px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .ing-pill-remove:hover { color: var(--danger); }
+
+  .ing-add-row { display: flex; gap: 8px; }
+
+  .ing-add-input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    background: white;
+    color: var(--charcoal);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .ing-add-input:focus { border-color: var(--sage); }
+  .ing-add-input::placeholder { color: #bbb; }
+
+  .ing-add-btn {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .ing-add-btn:hover { opacity: 0.85; }
+
+  .ing-count {
+    font-size: 11px;
+    color: var(--warm-grey);
+    font-weight: 500;
+    padding: 2px 0;
+  }
+  .ing-count span { color: var(--sage-dark); font-weight: 700; }
+
+  /* ── OCR STATUS INDICATOR ── */
+  .ocr-status {
+    font-size: 11px;
+    color: var(--warm-grey);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+    transition: color 0.2s;
+  }
+  .ocr-status.loading { color: var(--gold); }
+  .ocr-status.done    { color: var(--success); }
+  .ocr-status.error   { color: var(--danger); }
+
+  .ocr-spinner {
+    width: 10px; height: 10px;
+    border: 1.5px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* ── FULL WIDTH CARD ── */
+  .full-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-top: 24px;
+  }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-wrap { display: flex; justify-content: center; margin-top: 28px; }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.25s;
+    box-shadow: 0 8px 24px rgba(90,125,87,0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    pointer-events: none;
+  }
+
+  .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(90,125,87,0.45); }
+  .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+  /* ── LOADER ── */
+  .loader-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(250,247,242,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .loader-overlay.active { display: flex; }
+
+  .loader-ring {
+    width: 64px; height: 64px;
+    border: 4px solid var(--cream-dark);
+    border-top-color: var(--sage-dark);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-text { font-size: 15px; font-weight: 600; color: var(--charcoal); }
+  .loader-sub { font-size: 12px; color: var(--warm-grey); }
+
+  /* ── RESULTS PANEL ── */
+  .results-wrap {
+    display: none;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .results-wrap.active { display: block; }
+
+  /* ── SCORE HEADER ── */
+  .score-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 28px;
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    border-radius: var(--radius);
+    color: white;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-header::before {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+
+  .score-header::after {
+    content: '';
+    position: absolute;
+    right: 40px;
+    bottom: -30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .sh-score-circle {
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 3px solid rgba(255,255,255,0.3);
+  }
+
+  .sh-score-num { font-size: 28px; font-weight: 800; }
+  .sh-score-label { font-size: 10px; font-weight: 600; opacity: 0.8; text-transform: uppercase; }
+
+  .sh-info { z-index: 1; }
+  .sh-product { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .sh-grade { font-size: 12px; opacity: 0.85; margin-bottom: 10px; }
+
+  .sh-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .sh-badge {
+    padding: 4px 12px;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.2);
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  /* ── RESULT GRID ── */
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .result-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+
+  .rc-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rc-title i { width: 28px; height: 28px; background: rgba(138,175,135,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--sage-dark); font-size: 13px; }
+
+  /* ── PRO CON LIST ── */
+  .pro-con-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .pc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .pc-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 10px;
+  }
+
+  .pc-pro { background: rgba(122,175,138,0.2); color: #3d7a51; }
+  .pc-con { background: rgba(212,117,107,0.2); color: #b04038; }
+  .pc-warn { background: rgba(212,167,106,0.2); color: #a07030; }
+
+  /* ── INGREDIENT PILLS ── */
+  .ing-grid { display: flex; flex-direction: column; gap: 8px; }
+
+  .ing-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .ing-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .ing-dot-good { background: var(--success); }
+  .ing-dot-warn { background: var(--warning); }
+  .ing-dot-bad  { background: var(--danger); }
+
+  .ing-name { font-weight: 600; flex: 1; }
+  .ing-score { font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 50px; }
+  .ings-good { background: rgba(122,175,138,0.15); color: #3d7a51; }
+  .ings-warn { background: rgba(212,167,106,0.15); color: #a07030; }
+  .ings-bad  { background: rgba(212,117,107,0.15); color: #b04038; }
+
+  /* ── LLM REPORT ── */
+  .llm-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-top: 16px;
+  }
+
+  .llm-header {
+    background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(168,213,194,0.12));
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .llm-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--gold), #a07030);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+
+  .llm-header-text h4 { font-size: 14px; font-weight: 700; }
+  .llm-header-text p  { font-size: 11px; color: var(--warm-grey); }
+
+  .llm-body { padding: 22px; }
+
+  .llm-headline {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .llm-verdict {
+    font-size: 13px;
+    color: var(--warm-grey);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    padding: 14px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--sage);
+  }
+
+  .llm-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .llm-subsection h5 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sage-dark);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .llm-tips { display: flex; flex-direction: column; gap: 7px; }
+
+  .llm-tip {
+    font-size: 12px;
+    color: var(--charcoal);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .llm-tip i { color: var(--sage); margin-top: 2px; flex-shrink: 0; }
+
+  /* ── LAYERING STEPS ── */
+  .step-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .step-num {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-text { font-size: 13px; line-height: 1.5; }
+  .step-time { font-size: 11px; color: var(--warm-grey); margin-top: 2px; }
+
+  /* ── LAYERING SPECIFIC ── */
+  .product-compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .pc-product {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .pc-product-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--sage-dark); margin-bottom: 6px; }
+  .pc-product-name { font-size: 14px; font-weight: 700; }
+
+  .pc-vs {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(90,125,87,0.3);
+    margin: 0 auto;
+  }
+
+  /* ── INTERACTION PAIRS ── */
+  .pair-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .pair-item {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    font-size: 12px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pair-synergy { background: rgba(122,175,138,0.08); border-color: rgba(122,175,138,0.3); color: var(--charcoal); }
+  .pair-conflict { background: rgba(212,117,107,0.08); border-color: rgba(212,117,107,0.3); color: var(--charcoal); }
+  .pair-neutral  { background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.3); color: var(--charcoal); }
+
+  /* ── WARNING BANNERS ── */
+  .warn-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .warn-danger  { background: rgba(212,117,107,0.1);  border: 1px solid rgba(212,117,107,0.25); color: var(--charcoal); }
+  .warn-caution { background: rgba(212,167,106,0.1);  border: 1px solid rgba(212,167,106,0.25); color: var(--charcoal); }
+  .warn-info    { background: rgba(138,175,135,0.1);  border: 1px solid rgba(138,175,135,0.25); color: var(--charcoal); }
+
+  .warn-icon { flex-shrink: 0; margin-top: 1px; }
+  .warn-danger  .warn-icon { color: var(--danger); }
+  .warn-caution .warn-icon { color: var(--warning); }
+  .warn-info    .warn-icon { color: var(--sage-dark); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--warm-grey);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: var(--charcoal); }
+  .empty-sub { font-size: 13px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+
+  .footer-left { display: flex; align-items: center; gap: 10px; }
+  .footer-logo { font-size: 15px; font-weight: 700; }
+  .footer-logo span { color: var(--sage-dark); }
+  .footer-sep { width: 1px; height: 20px; background: var(--border); }
+  .footer-tagline { font-size: 12px; color: var(--warm-grey); }
+
+  .footer-right { font-size: 12px; color: var(--warm-grey); display: flex; align-items: center; gap: 8px; }
+  .footer-right i { color: var(--blush); }
+
+  /* ── TOOLTIP ── */
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--charcoal);
+    color: white;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 7px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 999;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding: 40px 20px; gap: 40px; }
+    .hero-visual { order: -1; }
+    .stats-row { grid-template-columns: repeat(2,1fr); padding: 0 20px; }
+    .form-grid, .result-grid, .llm-sections { grid-template-columns: 1fr; }
+    .main-section { padding: 0 20px 60px; }
+    header { padding: 0 20px; }
+    nav { display: none; }
+    .product-compare { grid-template-columns: 1fr; }
+    .pc-vs { display: none; }
+  }
+
+  /* ── NOTIFICATION ── */
+  .notif {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 320px;
+  }
+
+  .notif.show { transform: translateY(0); opacity: 1; }
+  .notif-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .notif-success .notif-icon { background: rgba(122,175,138,0.15); color: var(--success); }
+  .notif-error   .notif-icon { background: rgba(212,117,107,0.15); color: var(--danger); }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ── HEADER ── -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgBg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#8AAF87"/><stop offset="100%" stop-color="#4A6E47"/></linearGradient><linearGradient id="lgDrop" x1="20" y1="6" x2="20" y2="30" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="rgba(255,255,255,0.95)"/><stop offset="100%" stop-color="rgba(255,255,255,0.65)"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="url(#lgBg)"/><path d="M20 7 C20 7 13 15 13 21 C13 25.4 16.1 29 20 29 C23.9 29 27 25.4 27 21 C27 15 20 7 20 7Z" fill="url(#lgDrop)" opacity="0.92"/><line x1="16" y1="19" x2="24" y2="19" stroke="#5A7D57" stroke-width="1.4" stroke-linecap="round"/><line x1="15" y1="22" x2="25" y2="22" stroke="#5A7D57" stroke-width="1.4" stroke-linecap="round"/><line x1="17" y1="25" x2="23" y2="25" stroke="#5A7D57" stroke-width="1.4" stroke-linecap="round"/><circle cx="27" cy="10" r="2" fill="white" opacity="0.7"/><circle cx="27" cy="10" r="1" fill="white" opacity="0.9"/></svg></div>
+    <span class="logo-text">Skin<span>Spectra</span></span>
+  </a>
+  <nav>
+    <button class="nav-pill active" onclick="scrollToSection('analyze')">
+      <i class="fa-solid fa-microscope"></i> Analyze
+    </button>
+    <button class="nav-pill" onclick="scrollToSection('about')">
+      <i class="fa-solid fa-circle-info"></i> About
+    </button>
+    <button class="nav-pill" onclick="showNotif('API is live on port 8000 — connect your environment!', 'success')">
+      <i class="fa-solid fa-plug"></i> API Status
+    </button>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">
+      <i class="fa-solid fa-flask-vial"></i>
+      AI-Powered Skincare Intelligence
+    </div>
+    <h1>Decode your skin.<br><em>Elevate your routine.</em></h1>
+    <p>SkinSpectra uses advanced NLP and machine learning to analyse skincare ingredient lists, score product compatibility for your unique skin profile, and generate expert-level personalised reports.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollToSection('analyze')">
+        <i class="fa-solid fa-vials"></i> Start Analysis
+      </button>
+      <button class="btn-outline" onclick="scrollToSection('about')">
+        <i class="fa-solid fa-book-medical"></i> How it works
+      </button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hc-header">
+        <div class="hc-icon"><i class="fa-solid fa-droplet"></i></div>
+        <div>
+          <div class="hc-title">Product Analysis</div>
+          <div class="hc-sub">Niacinamide Serum — Oily Skin</div>
+        </div>
+      </div>
+      <div class="score-ring">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8AAF87"/>
+                <stop offset="100%" stop-color="#5A7D57"/>
+              </linearGradient>
+            </defs>
+            <circle class="ring-bg" cx="50" cy="50" r="40"/>
+            <circle class="ring-fill" cx="50" cy="50" r="40" stroke-dashoffset="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-score">84</span>
+            <span class="ring-grade">A</span>
+          </div>
+        </div>
+        <small style="font-size:11px;color:var(--warm-grey)">Compatibility Score</small>
+      </div>
+      <div class="hc-tags">
+        <span class="hc-tag tag-good"><i class="fa-solid fa-circle-check"></i> Pore-minimising</span>
+        <span class="hc-tag tag-good"><i class="fa-solid fa-circle-check"></i> Brightening</span>
+        <span class="hc-tag tag-warn"><i class="fa-solid fa-triangle-exclamation"></i> High Retinol</span>
+        <span class="hc-tag tag-bad"><i class="fa-solid fa-circle-xmark"></i> Vitamin C conflict</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-icon si-sage"><i class="fa-solid fa-vial-circle-check"></i></div>
+    <div>
+      <div class="stat-num">60+</div>
+      <div class="stat-label">Ingredients per analysis</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-gold"><i class="fa-solid fa-brain"></i></div>
+    <div>
+      <div class="stat-num">3-Layer</div>
+      <div class="stat-label">NLP → ML → LLM pipeline</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-mint"><i class="fa-solid fa-layer-group"></i></div>
+    <div>
+      <div class="stat-num">2-Product</div>
+      <div class="stat-label">Layering compatibility</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-blush"><i class="fa-solid fa-shield-halved"></i></div>
+    <div>
+      <div class="stat-num">INCI</div>
+      <div class="stat-label">Standard name mapping</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ANALYSIS SECTION ── -->
+<div class="main-section" id="analyze">
+  <div class="section-title">Analysis Studio</div>
+  <div class="section-sub">Upload ingredient label images or paste ingredient lists for instant AI-powered skincare insights.</div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('single')">
+      <i class="fa-solid fa-flask"></i> Single Product
+    </button>
+    <button class="tab-btn" onclick="switchTab('layering')">
+      <i class="fa-solid fa-layer-group"></i> Product Layering
+    </button>
+  </div>
+
+  <!-- ─────────── TAB 1: SINGLE PRODUCT ─────────── -->
+  <div class="tab-panel active" id="tab-single">
+    <div class="form-grid">
+      <!-- LEFT: Upload + Product Info -->
+      <div>
+        <div class="form-card">
+          <div class="form-card-title"><i class="fa-solid fa-image"></i> Ingredient Label</div>
+          <div class="form-card-sub">Upload a photo of the ingredient list or paste them manually below.</div>
+
+          <div class="upload-zone" id="upload-zone-1" ondragover="handleDragOver(event,'1')" ondragleave="handleDragLeave('1')" ondrop="handleDrop(event,'1')">
+            <input type="file" id="file-input-1" accept="image/*" onchange="handleFile(event,'1')" />
+            <div class="upload-icon"><i class="fa-solid fa-camera-retro"></i></div>
+            <div class="upload-title">Drop your ingredient label here</div>
+            <div class="upload-sub">JPG, PNG, WEBP, TIFF · Max 10MB<br><span>Click to browse</span></div>
+          </div>
+          <div class="upload-preview" id="preview-1">
+            <img class="preview-img" id="preview-img-1" src="" alt="" />
+            <div style="flex:1;min-width:0">
+              <div class="preview-name" id="preview-name-1"></div>
+              <div class="ocr-status" id="ocr-status-1"></div>
+            </div>
+            <button class="preview-remove" onclick="removeFile('1')"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-tag"></i> Product Name</label>
+            <input type="text" id="product-name-1" placeholder="e.g. The Ordinary Niacinamide 10% + Zinc 1%" />
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-list"></i> Ingredient List</label>
+            <div class="ing-pill-box" id="ing-box-1">
+              <div class="ing-pills" id="ing-pills-1">
+                <span class="ing-empty-msg" id="ing-empty-1">No ingredients yet — upload a label or add manually below.</span>
+              </div>
+              <div class="ing-count" id="ing-count-1" style="display:none"><span id="ing-count-n-1">0</span> ingredients</div>
+              <div class="ing-add-row">
+                <input type="text" class="ing-add-input" id="ing-add-1" placeholder="Type an ingredient and press Enter…"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();addIngredientFromInput('1')}" />
+                <button class="ing-add-btn" onclick="addIngredientFromInput('1')"><i class="fa-solid fa-plus"></i> Add</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-robot"></i> Include AI Report</label>
+            <div class="chip-group">
+              <span class="chip selected" onclick="toggleChipSingle(this,'include-llm-1','yes')">Yes, generate report</span>
+              <span class="chip" onclick="toggleChipSingle(this,'include-llm-1','no')">Score only</span>
+            </div>
+            <input type="hidden" id="include-llm-1" value="yes" />
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Skin Profile -->
+      <div>
+        <div class="form-card">
+          <div class="form-card-title"><i class="fa-solid fa-person-rays"></i> Your Skin Profile</div>
+          <div class="form-card-sub">Tell us about your skin so we can personalise the analysis.</div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-droplet"></i> Skin Type</label>
+            <div class="chip-group" id="skin-type-chips-1">
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Oily')">Oily</span>
+              <span class="chip selected" onclick="selectChipGroup(this,'skin-type-chips-1','Dry')">Dry</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Combination')">Combination</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Normal')">Normal</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Sensitive')">Sensitive</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Mature')">Mature</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-magnifying-glass-chart"></i> Skin Concerns (select all that apply)</label>
+            <div class="chip-group" id="concerns-chips-1">
+              <span class="chip" onclick="toggleChip(this)">Acne</span>
+              <span class="chip selected" onclick="toggleChip(this)">Dryness</span>
+              <span class="chip" onclick="toggleChip(this)">Aging</span>
+              <span class="chip" onclick="toggleChip(this)">Hyperpigmentation</span>
+              <span class="chip" onclick="toggleChip(this)">Redness</span>
+              <span class="chip" onclick="toggleChip(this)">Sensitivity</span>
+              <span class="chip" onclick="toggleChip(this)">Pores</span>
+              <span class="chip" onclick="toggleChip(this)">Texture</span>
+              <span class="chip" onclick="toggleChip(this)">Dullness</span>
+              <span class="chip" onclick="toggleChip(this)">Barrier</span>
+            </div>
+          </div>
+
+          <div class="form-grid" style="gap:14px">
+            <div class="field">
+              <label><i class="fa-solid fa-calendar"></i> Age Group</label>
+              <div class="select-wrap">
+                <select id="age-group-1">
+                  <option value="teen">Teen (13–19)</option>
+                  <option value="adult" selected>Adult (20–49)</option>
+                  <option value="mature">Mature (50+)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label><i class="fa-solid fa-gauge-high"></i> Sensitivity Level</label>
+              <div class="select-wrap">
+                <select id="sensitivity-1">
+                  <option value="low">Low</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-graduation-cap"></i> Experience Level</label>
+            <div class="chip-group" id="exp-chips-1">
+              <span class="chip selected" onclick="selectChipGroup(this,'exp-chips-1','beginner')">Beginner</span>
+              <span class="chip" onclick="selectChipGroup(this,'exp-chips-1','intermediate')">Intermediate</span>
+              <span class="chip" onclick="selectChipGroup(this,'exp-chips-1','advanced')">Advanced</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-triangle-exclamation"></i> Known Allergies</label>
+            <input type="text" id="allergies-1" placeholder="e.g. fragrance, lanolin, parabens" />
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-cloud-sun"></i> Climate / Location</label>
+            <input type="text" id="climate-1" placeholder="e.g. humid tropical, dry continental" />
+          </div>
+
+          <div class="field" style="display:flex;align-items:center;gap:12px;margin-bottom:0">
+            <label style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600">
+              <i class="fa-solid fa-baby" style="color:var(--blush)"></i> Pregnant / Planning pregnancy?
+            </label>
+            <input type="checkbox" id="pregnant-1" style="width:18px;height:18px;accent-color:var(--sage-dark);cursor:pointer" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="analyzeProduct()">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        Analyse Product
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-wrap" id="results-single">
+      <div class="divider" style="margin:36px 0 28px"></div>
+      <div id="results-single-inner"></div>
+    </div>
+  </div>
+
+  <!-- ─────────── TAB 2: LAYERING ─────────── -->
+  <div class="tab-panel" id="tab-layering">
+    <div class="form-grid">
+
+      <!-- PRODUCT A -->
+      <div>
+        <div class="form-card">
+          <div class="form-card-title">
+            <i class="fa-solid fa-1" style="background:rgba(138,175,135,0.15);color:var(--sage-dark);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px"></i>
+            Product A — Applied First
+          </div>
+          <div class="form-card-sub">This product goes on skin first in your layering routine.</div>
+
+          <div class="upload-zone" id="upload-zone-a" ondragover="handleDragOver(event,'a')" ondragleave="handleDragLeave('a')" ondrop="handleDrop(event,'a')">
+            <input type="file" id="file-input-a" accept="image/*" onchange="handleFile(event,'a')" />
+            <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
+            <div class="upload-title">Upload Product A label</div>
+            <div class="upload-sub">JPG, PNG, WEBP · <span>Click to browse</span></div>
+          </div>
+          <div class="upload-preview" id="preview-a">
+            <img class="preview-img" id="preview-img-a" src="" alt="" />
+            <div style="flex:1;min-width:0">
+              <div class="preview-name" id="preview-name-a"></div>
+              <div class="ocr-status" id="ocr-status-a"></div>
+            </div>
+            <button class="preview-remove" onclick="removeFile('a')"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-tag"></i> Product A Name</label>
+            <input type="text" id="product-a-name" placeholder="e.g. Paula's Choice BHA Exfoliant" />
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-list"></i> Product A Ingredients</label>
+            <div class="ing-pill-box" id="ing-box-a">
+              <div class="ing-pills" id="ing-pills-a">
+                <span class="ing-empty-msg" id="ing-empty-a">No ingredients yet — upload a label or add manually below.</span>
+              </div>
+              <div class="ing-count" id="ing-count-a" style="display:none"><span id="ing-count-n-a">0</span> ingredients</div>
+              <div class="ing-add-row">
+                <input type="text" class="ing-add-input" id="ing-add-a" placeholder="Type an ingredient and press Enter…"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();addIngredientFromInput('a')}" />
+                <button class="ing-add-btn" onclick="addIngredientFromInput('a')"><i class="fa-solid fa-plus"></i> Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT B -->
+      <div>
+        <div class="form-card">
+          <div class="form-card-title">
+            <i class="fa-solid fa-2" style="background:rgba(201,169,110,0.15);color:#a07030;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px"></i>
+            Product B — Applied Second
+          </div>
+          <div class="form-card-sub">This product is layered on top of Product A.</div>
+
+          <div class="upload-zone" id="upload-zone-b" ondragover="handleDragOver(event,'b')" ondragleave="handleDragLeave('b')" ondrop="handleDrop(event,'b')">
+            <input type="file" id="file-input-b" accept="image/*" onchange="handleFile(event,'b')" />
+            <div class="upload-icon" style="background:linear-gradient(135deg,rgba(201,169,110,0.15),rgba(232,165,152,0.2))"><i class="fa-solid fa-camera" style="color:#a07030"></i></div>
+            <div class="upload-title">Upload Product B label</div>
+            <div class="upload-sub">JPG, PNG, WEBP · <span>Click to browse</span></div>
+          </div>
+          <div class="upload-preview" id="preview-b">
+            <img class="preview-img" id="preview-img-b" src="" alt="" />
+            <div style="flex:1;min-width:0">
+              <div class="preview-name" id="preview-name-b"></div>
+              <div class="ocr-status" id="ocr-status-b"></div>
+            </div>
+            <button class="preview-remove" onclick="removeFile('b')"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-tag"></i> Product B Name</label>
+            <input type="text" id="product-b-name" placeholder="e.g. The Ordinary Niacinamide 10%" />
+          </div>
+
+          <div class="field">
+            <label><i class="fa-solid fa-list"></i> Product B Ingredients</label>
+            <div class="ing-pill-box" id="ing-box-b">
+              <div class="ing-pills" id="ing-pills-b">
+                <span class="ing-empty-msg" id="ing-empty-b">No ingredients yet — upload a label or add manually below.</span>
+              </div>
+              <div class="ing-count" id="ing-count-b" style="display:none"><span id="ing-count-n-b">0</span> ingredients</div>
+              <div class="ing-add-row">
+                <input type="text" class="ing-add-input" id="ing-add-b" placeholder="Type an ingredient and press Enter…"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();addIngredientFromInput('b')}" />
+                <button class="ing-add-btn" onclick="addIngredientFromInput('b')"><i class="fa-solid fa-plus"></i> Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skin Profile for Layering -->
+    <div class="full-card">
+      <div class="form-card-title" style="margin-bottom:4px"><i class="fa-solid fa-person-rays"></i> Skin Profile &amp; Routine Settings</div>
+      <div class="form-card-sub">Used to personalise layering recommendations and safety warnings.</div>
+
+      <div class="form-grid" style="gap:24px;margin-top:20px">
+        <div>
+          <div class="field">
+            <label><i class="fa-solid fa-droplet"></i> Skin Type</label>
+            <div class="chip-group" id="skin-type-chips-l">
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','oily')">Oily</span>
+              <span class="chip selected" onclick="selectChipGroup(this,'skin-type-chips-l','combination')">Combination</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','dry')">Dry</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','normal')">Normal</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','sensitive')">Sensitive</span>
+              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','mature')">Mature</span>
+            </div>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-magnifying-glass-chart"></i> Skin Concerns</label>
+            <div class="chip-group" id="concerns-chips-l">
+              <span class="chip" onclick="toggleChip(this)">Acne</span>
+              <span class="chip" onclick="toggleChip(this)">Dryness</span>
+              <span class="chip selected" onclick="toggleChip(this)">Aging</span>
+              <span class="chip" onclick="toggleChip(this)">Hyperpigmentation</span>
+              <span class="chip" onclick="toggleChip(this)">Redness</span>
+              <span class="chip" onclick="toggleChip(this)">Sensitivity</span>
+              <span class="chip" onclick="toggleChip(this)">Pores</span>
+              <span class="chip" onclick="toggleChip(this)">Texture</span>
+              <span class="chip" onclick="toggleChip(this)">Dullness</span>
+              <span class="chip" onclick="toggleChip(this)">Barrier</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-grid" style="gap:14px">
+            <div class="field">
+              <label><i class="fa-solid fa-calendar"></i> Age Group</label>
+              <div class="select-wrap">
+                <select id="age-group-l">
+                  <option value="teen">Teen</option>
+                  <option value="adult" selected>Adult</option>
+                  <option value="mature">Mature</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label><i class="fa-solid fa-gauge-high"></i> Sensitivity</label>
+              <div class="select-wrap">
+                <select id="sensitivity-l">
+                  <option value="low">Low</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-clock"></i> Time of Day</label>
+            <div class="chip-group" id="tod-chips">
+              <span class="chip" onclick="selectChipGroup(this,'tod-chips','AM')"><i class="fa-solid fa-sun"></i> AM</span>
+              <span class="chip" onclick="selectChipGroup(this,'tod-chips','PM')"><i class="fa-solid fa-moon"></i> PM</span>
+              <span class="chip selected" onclick="selectChipGroup(this,'tod-chips','BOTH')"><i class="fa-solid fa-circle-half-stroke"></i> Both</span>
+            </div>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-triangle-exclamation"></i> Known Allergies</label>
+            <input type="text" id="allergies-l" placeholder="e.g. fragrance, lanolin" />
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <label style="margin:0;font-size:13px;font-weight:600">
+              <i class="fa-solid fa-baby" style="color:var(--blush)"></i> Pregnant?
+            </label>
+            <input type="checkbox" id="pregnant-l" style="width:18px;height:18px;accent-color:var(--sage-dark);cursor:pointer" />
+            <label style="margin:0;font-size:13px;font-weight:600;margin-left:20px">
+              <i class="fa-solid fa-robot" style="color:var(--sage-dark)"></i> AI Report?
+            </label>
+            <input type="checkbox" id="include-llm-l" checked style="width:18px;height:18px;accent-color:var(--sage-dark);cursor:pointer" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="analyzeLayering()">
+        <i class="fa-solid fa-layer-group"></i>
+        Analyse Layering Compatibility
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- LAYERING RESULTS -->
+    <div class="results-wrap" id="results-layering">
+      <div class="divider" style="margin:36px 0 28px"></div>
+      <div id="results-layering-inner"></div>
+    </div>
+  </div>
+
+</div><!-- /main-section -->
+
+<!-- ── ABOUT ── -->
+<div class="main-section" id="about" style="padding-top:20px">
+  <div style="height:1px;background:var(--border);margin-bottom:48px"></div>
+  <div class="section-title">How SkinSpectra Works</div>
+  <div class="section-sub">A three-layer AI pipeline designed for clinical-grade skincare intelligence.</div>
+  <div class="form-grid" style="gap:20px">
+    <div class="form-card" style="border-top:3px solid var(--sage)">
+      <div style="font-size:28px;color:var(--sage-dark);margin-bottom:12px"><i class="fa-solid fa-language"></i></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px">Layer 1 — NLP Mapping</div>
+      <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">Uses sentence-transformers (all-MiniLM-L6-v2) to map raw ingredient names to INCI standard nomenclature. Works even with brand names, abbreviations, and common misspellings.</p>
+    </div>
+    <div class="form-card" style="border-top:3px solid var(--gold)">
+      <div style="font-size:28px;color:#a07030;margin-bottom:12px"><i class="fa-solid fa-chart-line"></i></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px">Layer 2 — ML Scoring</div>
+      <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">XGBoost + rule engine for individual product scoring. LightGBM + rule engine for two-product layering compatibility. Trained on thousands of dermatologist-reviewed formulations.</p>
+    </div>
+    <div class="form-card" style="border-top:3px solid var(--mint)">
+      <div style="font-size:28px;color:#2e8a6a;margin-bottom:12px"><i class="fa-solid fa-microchip"></i></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px">Layer 3 — LLM Report</div>
+      <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">Gemini 2.5 Flash synthesises the ML outputs into a personalised, human-readable report with usage tips, routine integration advice, and safety warnings specific to your skin profile.</p>
+    </div>
+    <div class="form-card" style="border-top:3px solid var(--blush)">
+      <div style="font-size:28px;color:#b05040;margin-bottom:12px"><i class="fa-solid fa-eye"></i></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px">OCR Extraction</div>
+      <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">Tesseract 5 LSTM engine with adaptive binarisation, auto-deskew, and INCI-aware post-processing extracts ingredient lists directly from product label photos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-left">
+    <span class="footer-logo">Skin<span>Spectra</span></span>
+    <div class="footer-sep"></div>
+    <span class="footer-tagline">AI-powered skincare intelligence</span>
+  </div>
+  <div class="footer-right">
+    Made with <i class="fa-solid fa-heart"></i> for healthier skin
+  </div>
+</footer>
+
+<!-- ── LOADER ── -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text" id="loader-text">Analysing ingredients…</div>
+  <div class="loader-sub" id="loader-sub">NLP mapping → Compatibility scoring → Generating report</div>
+</div>
+
+<!-- ── NOTIFICATION ── -->
+<div class="notif" id="notif">
+  <div class="notif-icon"><i class="fa-solid fa-circle-check" id="notif-icon-inner"></i></div>
+  <span id="notif-text"></span>
+</div>
+
+<script>
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── CHIP HELPERS ──────────────────────────────────────────────────────────────
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+function selectChipGroup(el, groupId, val) {
+  document.querySelectorAll('#' + groupId + ' .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleChipSingle(el, hiddenId, val) {
+  el.closest('.chip-group').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById(hiddenId).value = val;
+}
+
+function getSelectedChip(groupId) {
+  const sel = document.querySelector('#' + groupId + ' .chip.selected');
+  return sel ? sel.textContent.trim().toLowerCase().replace(/<[^>]+>/g,'') : '';
+}
+
+function getSelectedChips(groupId) {
+  return Array.from(document.querySelectorAll('#' + groupId + ' .chip.selected'))
+    .map(c => c.textContent.trim().toLowerCase());
+}
+
+// ── FILE UPLOAD ───────────────────────────────────────────────────────────────
+function handleDragOver(e, id) {
+  e.preventDefault();
+  document.getElementById('upload-zone-' + id).classList.add('drag-over');
+}
+
+function handleDragLeave(id) {
+  document.getElementById('upload-zone-' + id).classList.remove('drag-over');
+}
+
+function handleDrop(e, id) {
+  e.preventDefault();
+  handleDragLeave(id);
+  const file = e.dataTransfer.files[0];
+  if (file) showPreview(id, file);
+}
+
+function handleFile(e, id) {
+  const file = e.target.files[0];
+  if (file) showPreview(id, file);
+}
+
+function showPreview(id, file) {
+  const preview = document.getElementById('preview-' + id);
+  const img     = document.getElementById('preview-img-' + id);
+  const name    = document.getElementById('preview-name-' + id);
+  const reader  = new FileReader();
+  reader.onload = ev => { img.src = ev.target.result; };
+  reader.readAsDataURL(file);
+  name.textContent = file.name;
+
+  // Prime status to loading before the preview becomes visible
+  const statusEl = document.getElementById('ocr-status-' + id);
+  if (statusEl) {
+    statusEl.className = 'ocr-status loading';
+    statusEl.innerHTML = '<span class="ocr-spinner"></span> Extracting ingredients…';
+  }
+
+  preview.classList.add('visible');
+  window['_file_' + id]        = file;
+  window['_ocr_loading_' + id] = true;
+
+  // Kick off OCR immediately — don't wait for Analyse click
+  runOcrForSlot(id, file);
+}
+
+function removeFile(id) {
+  document.getElementById('preview-' + id).classList.remove('visible');
+  document.getElementById('file-input-' + id).value = '';
+  window['_file_' + id]        = null;
+  window['_ocr_loading_' + id] = false;
+  const statusEl = document.getElementById('ocr-status-' + id);
+  if (statusEl) { statusEl.className = 'ocr-status'; statusEl.innerHTML = ''; }
+}
+
+// ── OCR ON FILE SELECT ────────────────────────────────────────────────────────
+async function runOcrForSlot(id, file) {
+  const statusEl = document.getElementById('ocr-status-' + id);
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('debug', 'false');
+    const res  = await fetch(`${API_BASE}/ocr/extract`, { method: 'POST', body: fd });
+    const json = await res.json();
+    if (!res.ok || !json.success) throw new Error(json.error || `OCR failed (HTTP ${res.status})`);
+    const ingredients = json.ingredients || [];
+    if (ingredients.length === 0) throw new Error('No ingredients found in image.');
+
+    setIngredients(id, ingredients);
+
+    if (statusEl) {
+      statusEl.className = 'ocr-status done';
+      statusEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${ingredients.length} ingredients extracted`;
+    }
+    showNotif(`OCR extracted ${ingredients.length} ingredients — review and edit if needed.`, 'success');
+  } catch (err) {
+    if (statusEl) {
+      statusEl.className = 'ocr-status error';
+      statusEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> OCR failed — paste ingredients manually`;
+    }
+    showNotif(`OCR error: ${err.message}`, 'error');
+  } finally {
+    window['_ocr_loading_' + id] = false;
+  }
+}
+
+// ── SCROLL HELPER ─────────────────────────────────────────────────────────────
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+// ── LOADER ────────────────────────────────────────────────────────────────────
+function showLoader(text, sub) {
+  document.getElementById('loader-text').textContent = text || 'Analysing ingredients…';
+  document.getElementById('loader-sub').textContent  = sub  || 'NLP mapping → ML scoring → Generating AI report';
+  document.getElementById('loader').classList.add('active');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.remove('active');
+}
+
+// ── NOTIFICATION ──────────────────────────────────────────────────────────────
+function showNotif(msg, type = 'success') {
+  const n = document.getElementById('notif');
+  const icon = document.getElementById('notif-icon-inner');
+  n.className = 'notif notif-' + type;
+  icon.className = type === 'success'
+    ? 'fa-solid fa-circle-check'
+    : 'fa-solid fa-circle-exclamation';
+  document.getElementById('notif-text').textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+// ── GRADE → COLOR ─────────────────────────────────────────────────────────────
+function gradeColor(grade) {
+  const map = { A: '#3d7a51', B: '#5a8a4a', C: '#a07030', D: '#b04038', F: '#8b1a1a' };
+  return map[grade] || '#5a8a4a';
+}
+
+function scoreColor(score) {
+  if (score >= 80) return 'var(--success)';
+  if (score >= 60) return 'var(--warning)';
+  return 'var(--danger)';
+}
+
+// ── INGREDIENT PILL HELPERS ──────────────────────────────────────────────────
+function getIngredients(slot) {
+  return Array.from(document.querySelectorAll(`#ing-pills-${slot} .ing-pill`))
+    .map(p => p.querySelector('.ing-pill-label').textContent.trim())
+    .filter(Boolean);
+}
+
+function setIngredients(slot, list) {
+  const container = document.getElementById('ing-pills-' + slot);
+  // Remove all existing pills
+  container.querySelectorAll('.ing-pill').forEach(p => p.remove());
+  list.forEach(name => _addPill(slot, name));
+  _refreshIngCount(slot);
+}
+
+function addIngredientFromInput(slot) {
+  const input = document.getElementById('ing-add-' + slot);
+  const raw   = input.value.trim();
+  if (!raw) return;
+  // Support comma-pasted lists
+  raw.split(',').map(s => s.trim()).filter(Boolean).forEach(name => _addPill(slot, name));
+  input.value = '';
+  _refreshIngCount(slot);
+  input.focus();
+}
+
+function _addPill(slot, name) {
+  const container = document.getElementById('ing-pills-' + slot);
+  const pill = document.createElement('span');
+  pill.className = 'ing-pill';
+  pill.innerHTML =
+    `<span class="ing-pill-label" title="${name.replace(/"/g,'&quot;')}">${name}</span>`+
+    `<button class="ing-pill-remove" onclick="this.closest('.ing-pill').remove();_refreshIngCount('${slot}')" title="Remove"><i class="fa-solid fa-xmark"></i></button>`;
+  container.appendChild(pill);
+}
+
+function _refreshIngCount(slot) {
+  const pills   = document.querySelectorAll(`#ing-pills-${slot} .ing-pill`);
+  const empty   = document.getElementById('ing-empty-' + slot);
+  const countEl = document.getElementById('ing-count-' + slot);
+  const countN  = document.getElementById('ing-count-n-' + slot);
+  if (empty)   empty.style.display   = pills.length ? 'none' : '';
+  if (countEl) countEl.style.display = pills.length ? '' : 'none';
+  if (countN)  countN.textContent    = pills.length;
+}
+
+// ── PARSE INGREDIENTS FROM TEXT (kept for compatibility) ─────────────────────
+function parseIngredients(text) {
+  return text.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+}
+
+
+// ── API BASE URL — auto-detects same origin ───────────────────────────────────
+const API_BASE = window.location.origin;
+
+// ── REAL API CALL FOR PRODUCT ANALYSIS ───────────────────────────────────────
+async function analyzeProduct() {
+  const productName  = document.getElementById('product-name-1').value.trim() || 'My Product';
+  const skinType     = document.querySelector('#skin-type-chips-1 .chip.selected')?.textContent.trim().toLowerCase() || 'normal';
+  const concerns     = getSelectedChips('concerns-chips-1');
+  const ageGroup     = document.getElementById('age-group-1').value;
+  const sensitivity  = document.getElementById('sensitivity-1').value;
+  const experience   = document.querySelector('#exp-chips-1 .chip.selected')?.textContent.trim().toLowerCase() || 'beginner';
+  const allergies    = document.getElementById('allergies-1').value.trim();
+  const climate      = document.getElementById('climate-1').value.trim();
+  const pregnant     = document.getElementById('pregnant-1').checked;
+  const includeLlm   = document.getElementById('include-llm-1').value === 'yes';
+  const hasFile      = window['_file_1'];
+
+  let ingredients = getIngredients('1');
+
+  if (ingredients.length === 0 && !hasFile) {
+    showNotif('Please enter ingredients or upload a label image.', 'error');
+    return;
+  }
+
+  // Guard: OCR is still running in the background
+  if (window['_ocr_loading_1']) {
+    showNotif('Please wait — OCR is still extracting ingredients…', 'error');
+    return;
+  }
+
+  // Re-read in case OCR just finished and pills were populated
+  ingredients = getIngredients('1');
+  if (ingredients.length === 0) {
+    showNotif('No ingredients found. Please add at least one ingredient.', 'error');
+    return;
+  }
+
+  showLoader('Analysing product…', 'NLP mapping → XGBoost scoring → Gemini 2.5 Flash report');
+
+  const payload = {
+    product_name : productName,
+    ingredients  : ingredients,
+    skin_profile : {
+      skin_type        : skinType,
+      concerns         : concerns,
+      age_group        : ageGroup,
+      is_pregnant      : pregnant,
+      skin_sensitivity : sensitivity,
+      current_routine  : '',
+      allergies        : allergies,
+      location_climate : climate,
+      experience_level : experience,
+    },
+    include_llm : includeLlm,
+  };
+
+  try {
+    const res  = await fetch(`${API_BASE}/analyze/product`, {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload),
+    });
+    const json = await res.json();
+
+    if (!res.ok || !json.success) {
+      throw new Error(json.error || `Server error (HTTP ${res.status})`);
+    }
+
+    hideLoader();
+
+    // Normalise API response shape for the renderer
+    const d = json.data;
+    const renderData = {
+      product_name : d.product_name,
+      score        : d.score,
+      grade        : d.grade,
+      ocr_used     : !!hasFile,
+      ingredients  : ingredients,
+      calc         : {
+        pros               : d.calc.pros               || [],
+        cons               : d.calc.cons               || [],
+        warnings           : d.calc.warnings           || [],
+        ingredient_details : (d.calc.ingredient_details || []).map(ing => ({
+          name  : ing.name  || ing.inci_name || ing.ingredient || 'Unknown',
+          score : ing.score ?? ing.compatibility_score ?? 50,
+          note  : ing.note  || ing.verdict   || '',
+        })),
+      },
+      llm_report : d.llm_report ? {
+        headline          : d.llm_report.headline          || d.llm_report.title || '',
+        verdict           : d.llm_report.verdict           || d.llm_report.summary || '',
+        usage_tips        : d.llm_report.usage_tips        || d.llm_report.tips   || [],
+        concerns_addressed: d.llm_report.concerns_addressed|| [],
+        skin_fit_rating   : d.llm_report.skin_fit_rating   || 'Good',
+      } : null,
+    };
+
+    // Show API-level warnings as notifications
+    if (json.warnings && json.warnings.length > 0) {
+      json.warnings.forEach(w => showNotif(w, 'error'));
+    }
+
+    renderProductResults(renderData);
+    document.getElementById('results-single').classList.add('active');
+    setTimeout(() => {
+      document.getElementById('results-single').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    showNotif('Analysis complete! Your personalised report is ready.', 'success');
+
+  } catch (err) {
+    hideLoader();
+    showNotif(`Analysis failed: ${err.message}`, 'error');
+    console.error('[analyzeProduct]', err);
+  }
+}
+
+// ── REAL API CALL FOR LAYERING ────────────────────────────────────────────────
+async function analyzeLayering() {
+  const prodAName  = document.getElementById('product-a-name').value.trim() || 'Product A';
+  const prodBName  = document.getElementById('product-b-name').value.trim() || 'Product B';
+  const hasFileA   = window['_file_a'];
+  const hasFileB   = window['_file_b'];
+  const skinType   = document.querySelector('#skin-type-chips-l .chip.selected')?.textContent.trim().toLowerCase() || 'combination';
+  const concerns   = getSelectedChips('concerns-chips-l');
+  const ageGroup   = document.getElementById('age-group-l').value;
+  const sensitivity= document.getElementById('sensitivity-l').value;
+  const allergies  = document.getElementById('allergies-l').value.trim();
+  const pregnant   = document.getElementById('pregnant-l').checked;
+  const includeLlm = document.getElementById('include-llm-l').checked;
+  const todRaw     = document.querySelector('#tod-chips .chip.selected')?.textContent.trim() || 'BOTH';
+  const tod        = todRaw.replace(/[^\w]/g, '').toUpperCase();
+
+  const ingA = getIngredients('a');
+  const ingB = getIngredients('b');
+
+  if ((ingA.length === 0 && !hasFileA) || (ingB.length === 0 && !hasFileB)) {
+    showNotif('Please provide ingredients (or upload labels) for both products.', 'error');
+    return;
+  }
+
+  // Guard: OCR still running for either slot
+  if (window['_ocr_loading_a'] || window['_ocr_loading_b']) {
+    showNotif('Please wait — OCR is still extracting ingredients…', 'error');
+    return;
+  }
+
+  if (ingA.length === 0 || ingB.length === 0) {
+    showNotif('Please add at least one ingredient for each product.', 'error');
+    return;
+  }
+
+  showLoader('Analysing layering compatibility…', 'NLP (×2) → LightGBM scoring → Gemini 2.5 Flash report');
+
+  const payload = {
+    product_a_name : prodAName,
+    product_a_ings : ingA,
+    product_b_name : prodBName,
+    product_b_ings : ingB,
+    skin_profile   : {
+      skin_type        : skinType,
+      concerns         : concerns,
+      age_group        : ageGroup,
+      is_pregnant      : pregnant,
+      skin_sensitivity : sensitivity,
+      current_routine  : '',
+      allergies        : allergies,
+      location_climate : '',
+      experience_level : 'beginner',
+    },
+    time_of_day : tod,
+    include_llm : includeLlm,
+  };
+
+  try {
+    const res  = await fetch(`${API_BASE}/analyze/layering`, {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload),
+    });
+    const json = await res.json();
+
+    if (!res.ok || !json.success) {
+      throw new Error(json.error || `Server error (HTTP ${res.status})`);
+    }
+
+    hideLoader();
+
+    const d = json.data;
+
+    // Build wait_time string from wait_time_minutes (number) returned by API
+    const waitMins = d.layering.wait_time_minutes;
+    const waitStr  = waitMins
+      ? (waitMins === 1 ? '1 minute' : `${waitMins} minutes`)
+      : '2–3 minutes';
+
+    // Normalise application_steps — API returns objects with `instruction` or `text`
+    const steps = (d.layering.application_steps || []).map((s, i) => ({
+      step : i + 1,
+      text : s.instruction || s.text || s.step || String(s),
+      time : s.timing      || s.time || '',
+    }));
+
+    // Normalise pair_interactions — API may call them interactions
+    const pairs = (d.layering.pair_interactions || []).map(p => ({
+      type : p.type || (p.interaction_type === 'synergy' ? 'synergy' : p.interaction_type === 'conflict' ? 'conflict' : 'neutral'),
+      pair : p.pair || `${p.ingredient_a} + ${p.ingredient_b}`,
+      desc : p.desc || p.description || p.note || '',
+    }));
+
+    const renderData = {
+      product_a_name : d.product_a_name,
+      product_b_name : d.product_b_name,
+      score          : d.score,
+      grade          : d.grade,
+      product_a_ings : ingA,
+      product_b_ings : ingB,
+      layering : {
+        verdict           : d.layering.verdict,
+        layering_order    : d.layering.layering_order    || [],
+        wait_time         : waitStr,
+        pros              : d.layering.pros              || [],
+        cons              : d.layering.cons              || [],
+        warnings          : d.layering.warnings          || [],
+        application_steps : steps,
+        pair_interactions : pairs,
+      },
+      llm_report : d.llm_report ? {
+        headline : d.llm_report.headline || d.llm_report.title   || '',
+        verdict  : d.llm_report.verdict  || d.llm_report.summary || '',
+        tips     : d.llm_report.tips     || d.llm_report.usage_tips || d.llm_report.pro_tips || [],
+      } : null,
+    };
+
+    if (json.warnings && json.warnings.length > 0) {
+      json.warnings.forEach(w => showNotif(w, 'error'));
+    }
+
+    renderLayeringResults(renderData);
+    document.getElementById('results-layering').classList.add('active');
+    setTimeout(() => {
+      document.getElementById('results-layering').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    showNotif('Layering analysis complete!', 'success');
+
+  } catch (err) {
+    hideLoader();
+    showNotif(`Layering analysis failed: ${err.message}`, 'error');
+    console.error('[analyzeLayering]', err);
+  }
+}
+
+
+// ── RENDER SINGLE PRODUCT RESULTS ─────────────────────────────────────────────
+function renderProductResults(d) {
+  const { product_name: name, score, grade, calc, llm_report, ocr_used, ingredients } = d;
+
+  let html = `
+    <div class="score-header">
+      <div class="sh-score-circle">
+        <span class="sh-score-num">${score}</span>
+        <span class="sh-score-label">/ 100</span>
+      </div>
+      <div class="sh-info">
+        <div class="sh-product">${name}</div>
+        <div class="sh-grade">Grade <strong>${grade}</strong> Compatibility</div>
+        <div class="sh-badges">
+          <span class="sh-badge"><i class="fa-solid fa-vial"></i> ${ingredients.length} Ingredients</span>
+          ${ocr_used ? '<span class="sh-badge"><i class="fa-solid fa-eye"></i> OCR Extracted</span>' : '<span class="sh-badge"><i class="fa-solid fa-keyboard"></i> Manual Input</span>'}
+          <span class="sh-badge"><i class="fa-solid fa-brain"></i> AI Scored</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="rc-title"><i class="fa-solid fa-circle-check" style="background:rgba(122,175,138,0.12);color:var(--success)"></i> What Works Well</div>
+        <div class="pro-con-list">
+          ${calc.pros.length ? calc.pros.map(p => `<div class="pc-item"><div class="pc-icon pc-pro"><i class="fa-solid fa-check"></i></div><span>${p}</span></div>`).join('') : '<div class="pc-item" style="color:var(--warm-grey);font-size:12px">No specific pros identified.</div>'}
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="rc-title"><i class="fa-solid fa-triangle-exclamation" style="background:rgba(212,117,107,0.12);color:var(--danger)"></i> Watch Points</div>
+        <div class="pro-con-list">
+          ${calc.cons.map(c => `<div class="pc-item"><div class="pc-icon pc-con"><i class="fa-solid fa-xmark"></i></div><span>${c}</span></div>`).join('')}
+          ${calc.warnings.map(w => `<div class="pc-item"><div class="pc-icon pc-warn"><i class="fa-solid fa-exclamation"></i></div><span>${w}</span></div>`).join('')}
+          ${(!calc.cons.length && !calc.warnings.length) ? '<div class="pc-item" style="color:var(--warm-grey);font-size:12px">No significant concerns detected.</div>' : ''}
+        </div>
+      </div>
+
+      <div class="result-card" style="grid-column:1/-1">
+        <div class="rc-title"><i class="fa-solid fa-flask" style="background:rgba(138,175,135,0.12);color:var(--sage-dark)"></i> Ingredient Breakdown</div>
+        <div class="ing-grid">
+          ${calc.ingredient_details.length ? calc.ingredient_details.map(ing => {
+            const cls = ing.score >= 75 ? 'good' : ing.score >= 50 ? 'warn' : 'bad';
+            return `<div class="ing-item">
+              <div class="ing-dot ing-dot-${cls}"></div>
+              <span class="ing-name">${ing.name}</span>
+              <span style="font-size:12px;color:var(--warm-grey)">${ing.note}</span>
+              <span class="ing-score ings-${cls}">${ing.score}</span>
+            </div>`;
+          }).join('') : `<div style="color:var(--warm-grey);font-size:13px;padding:8px">No detailed ingredient data available from the model.</div>`}
+        </div>
+      </div>
+    </div>`;
+
+  if (llm_report) {
+    html += `
+    <div class="llm-section">
+      <div class="llm-header">
+        <div class="llm-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="llm-header-text">
+          <h4>AI-Generated Personalised Report</h4>
+          <p>Powered by Gemini 2.5 Flash · Tailored to your skin profile</p>
+        </div>
+        <div style="margin-left:auto">
+          <span class="hc-tag tag-good" style="font-size:12px;padding:6px 14px">
+            <i class="fa-solid fa-star"></i> ${llm_report.skin_fit_rating} Fit
+          </span>
+        </div>
+      </div>
+      <div class="llm-body">
+        <div class="llm-headline">${llm_report.headline}</div>
+        <div class="llm-verdict">${llm_report.verdict}</div>
+        <div class="llm-sections">
+          <div class="llm-subsection">
+            <h5><i class="fa-solid fa-clipboard-list"></i> Usage Tips</h5>
+            <div class="llm-tips">
+              ${(llm_report.usage_tips || []).map(t => `<div class="llm-tip"><i class="fa-solid fa-circle-dot"></i><span>${t}</span></div>`).join('')}
+            </div>
+          </div>
+          <div class="llm-subsection">
+            <h5><i class="fa-solid fa-bullseye"></i> Concerns Addressed</h5>
+            <div class="chip-group">
+              ${(llm_report.concerns_addressed || []).map(c => `<span class="hc-tag tag-good" style="font-size:11px">${c}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('results-single-inner').innerHTML = html;
+}
+
+// ── RENDER LAYERING RESULTS ───────────────────────────────────────────────────
+function renderLayeringResults(d) {
+  const { product_a_name, product_b_name, score, grade, product_a_ings, product_b_ings, layering, llm_report } = d;
+
+  let html = `
+    <div class="score-header">
+      <div class="sh-score-circle">
+        <span class="sh-score-num">${score}</span>
+        <span class="sh-score-label">/ 100</span>
+      </div>
+      <div class="sh-info">
+        <div class="sh-product">${product_a_name} + ${product_b_name}</div>
+        <div class="sh-grade">Grade <strong>${grade}</strong> Layering Compatibility</div>
+        <div class="sh-badges">
+          <span class="sh-badge"><i class="fa-solid fa-layer-group"></i> 2-Product Stack</span>
+          <span class="sh-badge"><i class="fa-solid fa-brain"></i> LightGBM + AI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-compare" style="margin:20px 0">
+      <div class="pc-product">
+        <div class="pc-product-label"><i class="fa-solid fa-1"></i> Applied First</div>
+        <div class="pc-product-name">${product_a_name}</div>
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">
+          ${product_a_ings.slice(0,4).map(i => `<span class="chip" style="pointer-events:none;font-size:10px;padding:3px 9px">${i}</span>`).join('')}
+        </div>
+      </div>
+      <div class="pc-vs"><i class="fa-solid fa-plus"></i></div>
+      <div class="pc-product" style="border-color:rgba(201,169,110,0.3)">
+        <div class="pc-product-label" style="color:#a07030"><i class="fa-solid fa-2"></i> Applied Second</div>
+        <div class="pc-product-name">${product_b_name}</div>
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">
+          ${product_b_ings.slice(0,4).map(i => `<span class="chip" style="pointer-events:none;font-size:10px;padding:3px 9px">${i}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="warn-banner warn-${score >= 70 ? 'info' : score >= 55 ? 'caution' : 'danger'}">
+      <i class="fa-solid fa-${score >= 70 ? 'circle-check' : score >= 55 ? 'triangle-exclamation' : 'circle-xmark'} warn-icon"></i>
+      <span><strong>Layering Verdict:</strong> ${layering.verdict}</span>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card" style="grid-column:1/-1">
+        <div class="rc-title"><i class="fa-solid fa-list-ol" style="background:rgba(138,175,135,0.12);color:var(--sage-dark)"></i> Application Protocol <span style="font-weight:400;font-size:11px;color:var(--warm-grey);margin-left:8px"><i class="fa-solid fa-clock"></i> Wait ${layering.wait_time} between products</span></div>
+        <div class="step-list">
+          ${layering.application_steps.length ? layering.application_steps.map(s => `
+            <div class="step-item">
+              <div class="step-num">${s.step}</div>
+              <div>
+                <div class="step-text">${s.text}</div>
+                ${s.time ? `<div class="step-time"><i class="fa-regular fa-clock"></i> ${s.time}</div>` : ''}
+              </div>
+            </div>`).join('') : '<div style="color:var(--warm-grey);font-size:13px;padding:8px">Apply Product A first, wait, then apply Product B.</div>'}
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="rc-title"><i class="fa-solid fa-circle-check" style="background:rgba(122,175,138,0.12);color:var(--success)"></i> Synergies</div>
+        <div class="pro-con-list">
+          ${layering.pros.length ? layering.pros.map(p => `<div class="pc-item"><div class="pc-icon pc-pro"><i class="fa-solid fa-check"></i></div><span>${p}</span></div>`).join('') : '<div class="pc-item" style="color:var(--warm-grey);font-size:12px">No notable synergies identified.</div>'}
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="rc-title"><i class="fa-solid fa-triangle-exclamation" style="background:rgba(212,117,107,0.12);color:var(--danger)"></i> Cautions</div>
+        <div class="pro-con-list">
+          ${layering.cons.map(c => `<div class="pc-item"><div class="pc-icon pc-con"><i class="fa-solid fa-xmark"></i></div><span>${c}</span></div>`).join('')}
+          ${layering.warnings.map(w => `<div class="pc-item"><div class="pc-icon pc-warn"><i class="fa-solid fa-exclamation"></i></div><span>${w}</span></div>`).join('')}
+          ${(!layering.cons.length && !layering.warnings.length) ? '<div class="pc-item" style="color:var(--warm-grey);font-size:12px">No significant cautions detected.</div>' : ''}
+        </div>
+      </div>
+
+      <div class="result-card" style="grid-column:1/-1">
+        <div class="rc-title"><i class="fa-solid fa-arrows-split-up-and-left" style="background:rgba(138,175,135,0.12);color:var(--sage-dark)"></i> Key Ingredient Pair Interactions</div>
+        <div class="pair-list">
+          ${layering.pair_interactions.length ? layering.pair_interactions.map(p => `
+            <div class="pair-item pair-${p.type}">
+              <i class="fa-solid fa-${p.type === 'synergy' ? 'circle-check' : p.type === 'conflict' ? 'circle-xmark' : 'circle-minus'}"
+                 style="color:${p.type === 'synergy' ? 'var(--success)' : p.type === 'conflict' ? 'var(--danger)' : 'var(--warning)'}"></i>
+              <div><strong>${p.pair}</strong> — ${p.desc}</div>
+            </div>`).join('') : '<div style="color:var(--warm-grey);font-size:13px;padding:8px">No specific ingredient pair data returned by the model.</div>'}
+        </div>
+      </div>
+    </div>`;
+
+  if (llm_report) {
+    html += `
+    <div class="llm-section">
+      <div class="llm-header">
+        <div class="llm-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="llm-header-text">
+          <h4>AI Layering Report</h4>
+          <p>Powered by Gemini 2.5 Flash · Personalised routine intelligence</p>
+        </div>
+      </div>
+      <div class="llm-body">
+        <div class="llm-headline">${llm_report.headline}</div>
+        <div class="llm-verdict">${llm_report.verdict}</div>
+        <div class="llm-subsection">
+          <h5><i class="fa-solid fa-lightbulb"></i> Pro Tips for This Stack</h5>
+          <div class="llm-tips">
+            ${(llm_report.tips || []).map(t => `<div class="llm-tip"><i class="fa-solid fa-circle-dot"></i><span>${t}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('results-layering-inner').innerHTML = html;
+}
+</script>
+</body>
+</html>

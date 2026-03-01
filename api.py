@@ -25,6 +25,11 @@ Routes
     POST /analyze/layering          skin profile + two ingredient lists
                                     → NLP → Layering → LLM → JSON report
 
+  OCR — Ingredient Label Extraction
+    POST /ocr/extract               upload ingredient label image
+                                    → pre-process → Tesseract → parse → ingredient list
+    GET  /ocr/info                  Tesseract version + supported formats
+
 Run
 ---
     uvicorn api:app --reload --port 8000
@@ -55,9 +60,9 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import APIRouter, FastAPI, File, Form, HTTPException, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field, field_validator
 
 # ── project layers ─────────────────────────────────────────────────────────────
@@ -66,6 +71,7 @@ from components.nlp_layer import INCIMapper
 from components.calculation_individual_layer import CompatibilityScorer
 from components.calculation_layering_layer import LayeringScorer
 from components.llm_layer import LLMLayer, UserProfile
+from components.ocr_handler import OCRHandler, TESSERACT_CONFIG
 
 # =============================================================================
 # LOGGING
@@ -202,6 +208,79 @@ app.add_middleware(
     allow_methods     = ["*"],
     allow_headers     = ["*"],
 )
+
+# ── OCR router ────────────────────────────────────────────────────────────────
+_ocr_handler = OCRHandler()
+_ocr_router  = APIRouter(prefix="/ocr", tags=["OCR — Ingredient Extraction"])
+
+
+@_ocr_router.post(
+    "/extract",
+    summary="Extract ingredient list from an ingredient label image",
+    description="""
+Upload a photo or scan of a product's ingredient label.
+
+**Supported formats**: JPG, PNG, WEBP, BMP, TIFF
+
+**Best results**:
+- Flat, well-lit image of the label
+- At least 800px wide
+- Text clearly readable (not blurry or heavily shadowed)
+
+**Returns**:
+- `ingredients` — parsed list ready for `/analyze/product` or `/analyze/layering`
+- `confidence` — high / medium / low / very_low
+- `raw_text` — raw Tesseract output (useful for debugging)
+- `warnings` — quality or parsing issues detected
+""",
+)
+async def ocr_extract(
+    file  : UploadFile = File(..., description="Ingredient label image"),
+    debug : bool       = Form(False, description="Include raw OCR text in response"),
+):
+    allowed_mime = {
+        "image/jpeg", "image/png", "image/webp",
+        "image/bmp", "image/tiff", "image/tif",
+    }
+    ct = (file.content_type or "").lower()
+    if ct and ct not in allowed_mime:
+        raise HTTPException(
+            status_code = 415,
+            detail      = f"Unsupported media type '{ct}'. "
+                          f"Upload a JPG, PNG, WEBP, BMP, or TIFF image.",
+        )
+
+    image_bytes = await file.read()
+    if len(image_bytes) == 0:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    result = _ocr_handler.extract_from_bytes(image_bytes, filename=file.filename or "upload")
+
+    if not debug:
+        result.pop("raw_text", None)
+        result.pop("corrected_text", None)
+
+    status_code = 200 if result["success"] else 422
+    return JSONResponse(content=result, status_code=status_code)
+
+
+@_ocr_router.get(
+    "/info",
+    summary="OCR engine info — version and supported formats",
+)
+async def ocr_info():
+    return {
+        "tesseract_version": _ocr_handler.tesseract_version(),
+        "supported_formats": _ocr_handler.supported_formats(),
+        "config"           : TESSERACT_CONFIG,
+        "description"      : (
+            "Tesseract 5 LSTM engine with adaptive binarisation, "
+            "auto-deskew, and INCI-aware post-processing"
+        ),
+    }
+
+
+app.include_router(_ocr_router)
 
 # =============================================================================
 # PYDANTIC MODELS
@@ -463,26 +542,9 @@ async def _http_handler(req: Request, exc: HTTPException):
 # INFO / HEALTH
 # =============================================================================
 
-@app.get("/", tags=["Info"], summary="API root — feature map")
+@app.get("/", tags=["Info"], summary="SkinSpectra web UI", include_in_schema=False)
 async def root():
-    return {
-        "name"       : "SkinSpectra API",
-        "version"    : API_VERSION,
-        "description": "AI-powered skincare ingredient analysis and product layering",
-        "docs"       : "/docs",
-        "redoc"      : "/redoc",
-        "endpoints"  : {
-            "GET  /health"              : "Liveness + model readiness",
-            "GET  /config/skin-types"   : "Valid skin_type values",
-            "GET  /config/concerns"     : "Valid skin concern values",
-            "GET  /config/age-groups"   : "Valid age_group values",
-            "GET  /config/models"       : "Loaded model status",
-            "POST /nlp/map"             : "Single ingredient → INCI",
-            "POST /nlp/map/batch"       : "Batch ingredient → INCI",
-            "POST /analyze/product"     : "Feature 1 — individual product analysis",
-            "POST /analyze/layering"    : "Feature 2 — two-product layering analysis",
-        },
-    }
+    return FileResponse(_HERE / "skinspectra.html", media_type="text/html")
 
 
 @app.get("/health", tags=["Info"], summary="Liveness and per-model readiness")
