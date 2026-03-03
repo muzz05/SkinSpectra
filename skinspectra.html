@@ -1215,6 +1215,32 @@
   .notif-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
   .notif-success .notif-icon { background: rgba(122,175,138,0.15); color: var(--success); }
   .notif-error   .notif-icon { background: rgba(212,117,107,0.15); color: var(--danger); }
+
+  /* ── FACE SCAN WIDGET ── */
+  .face-scan-row {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(138,175,135,0.07);
+    border: 1.5px dashed rgba(138,175,135,0.45);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .face-scan-row:hover { border-color: var(--sage); background: rgba(138,175,135,0.12); }
+  .face-scan-row input[type="file"] { display: none; }
+  .face-scan-icon { width: 34px; height: 34px; background: rgba(138,175,135,0.15); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: var(--sage-dark); font-size: 15px; flex-shrink: 0; }
+  .face-scan-text { flex: 1; }
+  .face-scan-title { font-size: 12px; font-weight: 700; color: var(--charcoal); }
+  .face-scan-sub   { font-size: 11px; color: var(--warm-grey); }
+  .face-scan-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 50px; white-space: nowrap; flex-shrink: 0; }
+  .face-scan-badge.idle    { background: rgba(138,175,135,0.15); color: var(--sage-dark); }
+  .face-scan-badge.loading { background: rgba(201,169,110,0.15); color: #a07030; }
+  .face-scan-badge.done    { background: rgba(122,175,138,0.2);  color: #3d7a51; }
+  .face-scan-badge.error   { background: rgba(212,117,107,0.15); color: #b04038; }
+  .face-scan-or { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .face-scan-or span { font-size: 11px; color: var(--warm-grey); white-space: nowrap; }
+  .face-scan-or::before, .face-scan-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
@@ -1406,13 +1432,21 @@
 
           <div class="field">
             <label><i class="fa-solid fa-droplet"></i> Skin Type</label>
+            <label class="face-scan-row" onclick="triggerFaceScan('1')">
+              <input type="file" id="face-scan-input-1" accept="image/*" onchange="detectSkinType(event,'1')">
+              <div class="face-scan-icon"><i class="fa-solid fa-face-smile-wink"></i></div>
+              <div class="face-scan-text">
+                <div class="face-scan-title">Detect via face photo</div>
+                <div class="face-scan-sub">AI reads your skin type automatically</div>
+              </div>
+              <span class="face-scan-badge idle" id="face-scan-badge-1">Auto-detect</span>
+            </label>
+            <div class="face-scan-or"><span>or select manually</span></div>
             <div class="chip-group" id="skin-type-chips-1">
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Oily')">Oily</span>
               <span class="chip selected" onclick="selectChipGroup(this,'skin-type-chips-1','Dry')">Dry</span>
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Combination')">Combination</span>
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Normal')">Normal</span>
-              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Sensitive')">Sensitive</span>
-              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-1','Mature')">Mature</span>
             </div>
           </div>
 
@@ -1609,13 +1643,21 @@
         <div>
           <div class="field">
             <label><i class="fa-solid fa-droplet"></i> Skin Type</label>
+            <label class="face-scan-row" onclick="triggerFaceScan('l')">
+              <input type="file" id="face-scan-input-l" accept="image/*" onchange="detectSkinType(event,'l')">
+              <div class="face-scan-icon"><i class="fa-solid fa-face-smile-wink"></i></div>
+              <div class="face-scan-text">
+                <div class="face-scan-title">Detect via face photo</div>
+                <div class="face-scan-sub">AI reads your skin type automatically</div>
+              </div>
+              <span class="face-scan-badge idle" id="face-scan-badge-l">Auto-detect</span>
+            </label>
+            <div class="face-scan-or"><span>or select manually</span></div>
             <div class="chip-group" id="skin-type-chips-l">
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','oily')">Oily</span>
               <span class="chip selected" onclick="selectChipGroup(this,'skin-type-chips-l','combination')">Combination</span>
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','dry')">Dry</span>
               <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','normal')">Normal</span>
-              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','sensitive')">Sensitive</span>
-              <span class="chip" onclick="selectChipGroup(this,'skin-type-chips-l','mature')">Mature</span>
             </div>
           </div>
           <div class="field">
@@ -1704,7 +1746,7 @@
 <div class="main-section" id="about" style="padding-top:20px">
   <div style="height:1px;background:var(--border);margin-bottom:48px"></div>
   <div class="section-title">How SkinSpectra Works</div>
-  <div class="section-sub">A three-layer AI pipeline designed for clinical-grade skincare intelligence.</div>
+  <div class="section-sub">A multi-layer AI pipeline designed for clinical-grade skincare intelligence.</div>
   <div class="form-grid" style="gap:20px">
     <div class="form-card" style="border-top:3px solid var(--sage)">
       <div style="font-size:28px;color:var(--sage-dark);margin-bottom:12px"><i class="fa-solid fa-language"></i></div>
@@ -1725,6 +1767,11 @@
       <div style="font-size:28px;color:#b05040;margin-bottom:12px"><i class="fa-solid fa-eye"></i></div>
       <div style="font-weight:700;font-size:16px;margin-bottom:8px">OCR Extraction</div>
       <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">Tesseract 5 LSTM engine with adaptive binarisation, auto-deskew, and INCI-aware post-processing extracts ingredient lists directly from product label photos.</p>
+    </div>
+    <div class="form-card" style="border-top:3px solid #7fa8d4">
+      <div style="font-size:28px;color:#3a6fa8;margin-bottom:12px"><i class="fa-solid fa-camera-retro"></i></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px">Facial Analysis</div>
+      <p style="font-size:13px;color:var(--warm-grey);line-height:1.7">EfficientNetV2-B2 CNN trained on facial images classifies your skin type (Oily, Dry, Normal, Combination) directly from a selfie — so you never have to guess your skin profile manually.</p>
     </div>
   </div>
 </div>
@@ -2427,6 +2474,45 @@ function renderLayeringResults(d) {
   }
 
   document.getElementById('results-layering-inner').innerHTML = html;
+}
+
+// ── FACIAL SKIN-TYPE DETECTION ──────────────────────────────────────────────────────────────────
+function triggerFaceScan(slot) {
+  document.getElementById('face-scan-input-' + slot).click();
+}
+
+async function detectSkinType(event, slot) {
+  const file  = event.target.files[0];
+  const badge = document.getElementById('face-scan-badge-' + slot);
+  if (!file) return;
+
+  badge.className   = 'face-scan-badge loading';
+  badge.textContent = 'Detecting…';
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    const res  = await fetch(`${API_BASE}/analyze/skin-type`, { method: 'POST', body: fd });
+    const json = await res.json();
+    if (!res.ok || !json.success) throw new Error(json.error || 'Detection failed');
+
+    const skinType = json.data.skin_type.toLowerCase();
+    const conf     = Math.round(json.data.confidence * 100);
+    const groupId  = slot === '1' ? 'skin-type-chips-1' : 'skin-type-chips-l';
+
+    document.querySelectorAll('#' + groupId + ' .chip').forEach(c => {
+      c.classList.toggle('selected', c.textContent.trim().toLowerCase() === skinType);
+    });
+
+    badge.className   = 'face-scan-badge done';
+    badge.textContent = `${json.data.skin_type} · ${conf}%`;
+    showNotif(`Skin type detected: ${json.data.skin_type} (${conf}% confidence)`, 'success');
+  } catch (err) {
+    badge.className   = 'face-scan-badge error';
+    badge.textContent = 'Failed';
+    showNotif(`Skin detection failed: ${err.message}`, 'error');
+  }
 }
 </script>
 </body>

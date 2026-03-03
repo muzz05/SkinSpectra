@@ -72,6 +72,7 @@ from components.calculation_individual_layer import CompatibilityScorer
 from components.calculation_layering_layer import LayeringScorer
 from components.llm_layer import LLMLayer, UserProfile
 from components.ocr_handler import OCRHandler, TESSERACT_CONFIG
+from components.facial_analysis import FacialAnalyzer
 
 # =============================================================================
 # LOGGING
@@ -108,9 +109,10 @@ def _resolve(env_val: str, default: str) -> str:
     return str(p if p.is_absolute() else _HERE / p)
 
 # model artefact paths (override via env)
-_NLP_DIR    = _resolve("SS_NLP_MODEL_DIR",      "models/nlp")
-_CALC_DIR   = _resolve("SS_CALC_MODEL_DIR",     "models/calculation-individual")
-_LAYER_DIR  = _resolve("SS_LAYERING_MODEL_DIR", "models/calculation-layering")
+_NLP_DIR    = _resolve("SS_NLP_MODEL_DIR",       "models/nlp")
+_CALC_DIR   = _resolve("SS_CALC_MODEL_DIR",      "models/calculation-individual")
+_LAYER_DIR  = _resolve("SS_LAYERING_MODEL_DIR",  "models/calculation-layering")
+_FACIAL_DIR = _resolve("SS_FACIAL_MODEL_DIR",    "models/facial_analysis")
 _DATASET2   = _resolve("SS_DATASET2",  "data/ingredient_profiles.csv")
 _DATASET3   = _resolve("SS_DATASET3",  "data/layering_compatibility.csv")
 _GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
@@ -123,10 +125,12 @@ class _State:
     calc        : Optional[CompatibilityScorer] = None
     layering    : Optional[LayeringScorer]      = None
     llm         : Optional[LLMLayer]            = None
+    facial      : Optional[FacialAnalyzer]      = None
     nlp_ok      : bool = False
     calc_ok     : bool = False
     layering_ok : bool = False
     llm_ok      : bool = False
+    facial_ok   : bool = False
     boot_secs   : float = 0.0
 
 S = _State()
@@ -178,11 +182,20 @@ async def lifespan(app: FastAPI):
             except Exception as e:
                 log.error(f"LLM init failed: {e}")
 
+    # Facial Analysis
+    try:
+        log.info(f"Loading Facial Analysis model from '{_FACIAL_DIR}'…")
+        S.facial    = FacialAnalyzer.load(model_dir=_FACIAL_DIR)
+        S.facial_ok = True
+        log.info("Facial Analysis model ✓")
+    except Exception as e:
+        log.error(f"Facial Analysis load failed: {e}")
+
     S.boot_secs = round(time.perf_counter() - t0, 2)
     log.info(
         f"Boot complete in {S.boot_secs}s | "
         f"NLP={S.nlp_ok} CALC={S.calc_ok} "
-        f"LAYERING={S.layering_ok} LLM={S.llm_ok}"
+        f"LAYERING={S.layering_ok} LLM={S.llm_ok} FACIAL={S.facial_ok}"
     )
     yield
     log.info("SkinSpectra API — shutdown")
@@ -555,10 +568,11 @@ async def health():
         "version"       : API_VERSION,
         "boot_time_sec" : S.boot_secs,
         "models"        : {
-            "nlp"      : "ready" if S.nlp_ok      else "not_loaded",
-            "calc"     : "ready" if S.calc_ok      else "not_loaded",
-            "layering" : "ready" if S.layering_ok  else "not_loaded",
-            "llm"      : "ready" if S.llm_ok       else "not_loaded",
+            "nlp"      : "ready" if S.nlp_ok       else "not_loaded",
+            "calc"     : "ready" if S.calc_ok       else "not_loaded",
+            "layering" : "ready" if S.layering_ok   else "not_loaded",
+            "llm"      : "ready" if S.llm_ok        else "not_loaded",
+            "facial"   : "ready" if S.facial_ok     else "not_loaded",
         },
     }
 
@@ -645,6 +659,12 @@ async def config_models():
                 "status"  : "ready" if S.llm_ok else "not_loaded",
                 "purpose" : "Generates structured JSON reports from calc layer outputs",
                 "enabled" : LLM_ENABLED,
+            },
+            "facial" : {
+                "name"     : "EfficientNetV2B2  (facial skin-type classifier)",
+                "status"   : "ready" if S.facial_ok else "not_loaded",
+                "purpose"  : "Detects face and predicts Dry / Normal / Oily skin type from a photo",
+                "model_dir": _FACIAL_DIR,
             },
         },
     }
@@ -938,6 +958,84 @@ async def analyze_layering(req: LayeringAnalysisRequest):
         f"lat={round((time.perf_counter() - t0) * 1000)}ms"
     )
     return _ok(data, t0, warnings)
+
+
+# =============================================================================
+# FEATURE 3 — FACIAL SKIN-TYPE DETECTION
+# =============================================================================
+
+@app.post(
+    "/analyze/skin-type",
+    tags=["Feature 3 — Facial Skin-Type Detection"],
+    summary="Detect skin type from a face photo",
+    description="""
+Upload a face photo and receive an AI-predicted skin type.
+
+**Supported formats**: JPG, PNG, WEBP, BMP
+
+**Best results**:
+- Clear, front-facing photo in good lighting
+- Face takes up most of the frame
+- No heavy filters or extreme shadows
+
+**Returns**: `skin_type` (Dry / Normal / Oily), `confidence`, `all_probabilities`, `latency_ms`
+""",
+)
+async def analyze_skin_type(
+    file: UploadFile = File(..., description="Face photo (JPG / PNG / WEBP / BMP)"),
+):
+    t0 = time.perf_counter()
+
+    if not S.facial_ok:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Facial analysis model not loaded. "
+                "Run training or check SS_FACIAL_MODEL_DIR env var."
+            ),
+        )
+
+    allowed_mime = {"image/jpeg", "image/png", "image/webp", "image/bmp"}
+    ct = (file.content_type or "").lower()
+    if ct and ct not in allowed_mime:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported media type '{ct}'. Upload a JPG, PNG, WEBP, or BMP image.",
+        )
+
+    image_bytes = await file.read()
+    if len(image_bytes) == 0:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    import tempfile, cv2
+    suffix = Path(file.filename or "upload.jpg").suffix or ".jpg"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(image_bytes)
+        tmp_path = tmp.name
+
+    try:
+        result = S.facial.predict(tmp_path)
+    finally:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+
+    if result is None:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "No face detected in the uploaded image. "
+                "Please use a clear, front-facing photo."
+            ),
+        )
+
+    result["latency_ms"] = round((time.perf_counter() - t0) * 1000, 2)
+    log.info(
+        f"[skin-type] skin={result['skin_type']} "
+        f"conf={result['confidence']} lat={result['latency_ms']}ms"
+    )
+    return _ok(result, t0)
 
 
 # =============================================================================
