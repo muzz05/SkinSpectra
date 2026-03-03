@@ -465,6 +465,7 @@ class APIResponse(BaseModel):
     data       : Optional[Any] = None
     warnings   : List[str]     = []
     error      : Optional[str] = None
+    error_code : Optional[str] = None
 
 
 # =============================================================================
@@ -1021,13 +1022,29 @@ async def analyze_skin_type(
         except OSError:
             pass
 
-    if result is None:
-        raise HTTPException(
-            status_code=422,
-            detail=(
+    # ── Handle face-detection / blur errors ────────────────────────────────────
+    if "error" in result:
+        error_code = result["error"]
+        lat = round((time.perf_counter() - t0) * 1000, 2)
+        if error_code == "blurry":
+            error_msg = (
+                "The uploaded image is too blurry to analyse. "
+                "Please upload a sharper, well-lit photo."
+            )
+        else:  # no_face
+            error_msg = (
                 "No face detected in the uploaded image. "
                 "Please use a clear, front-facing photo."
-            ),
+            )
+        log.warning(f"[skin-type] {error_code}: {error_msg}")
+        return JSONResponse(
+            status_code=422,
+            content=APIResponse(
+                success    = False,
+                latency_ms = lat,
+                error      = error_msg,
+                error_code = error_code,
+            ).dict(),
         )
 
     result["latency_ms"] = round((time.perf_counter() - t0) * 1000, 2)
