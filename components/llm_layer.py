@@ -46,35 +46,30 @@ logging.basicConfig(
 )
 log = logging.getLogger("skinspectra.llm")
 
-# =============================================================================
-# CONFIGURATION
-# =============================================================================
+# Configuration
 
 GEMINI_MODEL   = "gemini-2.5-flash"
 MAX_OUT_TOKENS = 3000
-TEMPERATURE    = 0.25   # Low: consistent, clinical tone; not robotic
+TEMPERATURE    = 0.25
 TOP_P          = 0.90
 
-# =============================================================================
-# USER PROFILE DATACLASS
-# =============================================================================
+# User Profile
 
 @dataclass
 class UserProfile:
-    """Complete user skin profile passed into the LLM layer."""
-    skin_type        : str              # oily / dry / combination / normal / sensitive / mature
-    concerns         : List[str]        # e.g. ["acne", "hyperpigmentation"]
-    age_group        : str              # teen / adult / mature
+    """User skin profile and context for personalized recommendations."""
+    skin_type        : str
+    concerns         : List[str]
+    age_group        : str
     is_pregnant      : bool
-    # Optional enrichment fields
-    skin_sensitivity : str  = "normal" # low / normal / high
-    current_routine  : str  = ""       # free text: "cleanser + SPF only"
-    allergies        : str  = ""       # free text: "fragrance, lanolin"
-    location_climate : str  = ""       # e.g. "humid tropical" / "dry cold"
-    experience_level : str  = "beginner" # beginner / intermediate / advanced
+    skin_sensitivity : str  = "normal"
+    current_routine  : str  = ""
+    allergies        : str  = ""
+    location_climate : str  = ""
+    experience_level : str  = "beginner"
 
     def to_prompt_str(self) -> str:
-        """Compact single-line summary for prompt injection."""
+        """Format profile as compact pipe-delimited string for prompt injection."""
         parts = [
             f"skin_type={self.skin_type}",
             f"age={self.age_group}",
@@ -92,11 +87,9 @@ class UserProfile:
         return " | ".join(parts)
 
 
-# =============================================================================
-# OUTPUT SCHEMAS
-# =============================================================================
+# Output Schemas
 
-# --- Feature 1: Individual Product Report ---
+# Feature 1: Individual Product Report
 INDIVIDUAL_REPORT_SCHEMA = {
     "report_type"          : "individual_product",
     "product_name"         : "str",
@@ -114,7 +107,7 @@ INDIVIDUAL_REPORT_SCHEMA = {
     "key_concerns"         : [
         {"concern": "str", "ingredient": "str", "severity": "str (low/medium/high/critical)"}
     ],
-    "warnings"             : ["str  (critical safety flags only)"],
+    "warnings"             : ["str  (critical safety only)"],
     "ingredient_highlights": [
         {"ingredient": "str", "role": "str", "verdict": "str (star/good/neutral/watch/avoid)"}
     ],
@@ -126,7 +119,7 @@ INDIVIDUAL_REPORT_SCHEMA = {
     "confidence_note"      : "str   (brief note on any ingredients not found in database)"
 }
 
-# --- Feature 2: Layering Report ---
+# Feature 2: Product Layering Report
 LAYERING_REPORT_SCHEMA = {
     "report_type"          : "product_layering",
     "product_a_name"       : "str",
@@ -159,49 +152,58 @@ LAYERING_REPORT_SCHEMA = {
 }
 
 
-# =============================================================================
-# PROMPT BUILDER
-# =============================================================================
+# Prompt Construction
 
 class PromptBuilder:
-    """
-    Builds tight, token-efficient prompts for each feature.
-    All prompts follow the same structure:
-      [SYSTEM BLOCK] → [USER DATA BLOCK] → [CALC DATA BLOCK] → [OUTPUT INSTRUCTION]
-    """
+    """Constructs token-efficient, structured prompts for individual product and layering reports."""
 
-    # ── SYSTEM PROMPT (shared, sent as system role) ────────────────────────
+    # System instruction (sent as system role to Gemini)
     SYSTEM_PROMPT = textwrap.dedent("""
-        You are SkinSpectra, an expert AI dermatology assistant with deep knowledge of cosmetic chemistry, ingredient interactions, and personalised skincare.
+        You are SkinSpectra, a clinical skincare expert assistant grounded in cosmetic chemistry and evidence-based dermatology.
 
-        YOUR ROLE:
-        - Interpret computational skincare compatibility scores and translate them into clear, actionable, personalised advice
-        - Speak like a knowledgeable friend who happens to be a dermatologist — warm, direct, never condescending
-        - Prioritise: Safety first → Efficacy → Cosmetic experience
-        - Tailor every insight to the specific user profile provided
+        ROLE & TONE:
+        Synthesize computational compatibility scores into personalized, medically-grounded recommendations. Your voice is warm yet authoritative—knowledgeable friend who is also a dermatologist.
 
-        STRICT RULES:
-        1. Output ONLY valid JSON matching the schema provided. No markdown, no preamble, no explanation outside JSON.
-        2. Never diagnose medical conditions. Never claim to replace a dermatologist.
-        3. Never invent ingredients not present in the data. Only reference what is given.
-        4. When score >= 80: be enthusiastic but accurate. When score < 50: be honest but not alarmist.
-        5. Pregnancy warnings must be explicit, clear, and never softened.
-        6. Keep all string fields concise. No padding, no filler phrases.
-        7. ingredient_highlights: include max 5 most impactful ingredients only.
-        8. key_benefits and key_concerns: max 4 each.
+        PRIORITY FRAMEWORK:
+        1. Safety (toxicity, pregnancy, allergies, interactions)
+        2. Efficacy (clinical evidence, skin concern targeting)
+        3. Integration (routine fit, user experience)
+
+        OUTPUT REQUIREMENTS:
+        - Return ONLY valid JSON matching the provided schema. No markdown, preamble, explanation, or code fences.
+        - All responses must be factually grounded in the ingredient data provided.
+        - Output fields must be concise and action-oriented. Eliminate filler, padding, or hedging language.
+
+        CRITICAL CONSTRAINTS:
+        1. Never diagnose medical conditions or claim to replace professional dermatology.
+        2. Never reference ingredients not explicitly provided in the data input.
+        3. Pregnancy: If user is pregnant, flag ALL potentially unsafe ingredients with explicit severity (critical/avoid/use_caution).
+        4. Tone calibration: Score ≥80 = enthusiastic confidence. Score <50 = honest caution (never alarmist). Score 50-79 = balanced assessment.
+        5. Scoring rationale: Always reflect the computational score in your text-based verdict. Do not contradict the data.
+        6. List constraints: key_benefits max 4, key_concerns max 4, ingredient_highlights max 5, warnings: critical only.
+
+        FIELD-SPECIFIC RULES:
+        - headline: punchy, ≤15 words, no filler adjectives
+        - summary: 2-3 personalized sentences tied to user's skin_type and concerns
+        - routine_integration: specific steps—"apply after cleanser, wait 2 min, then moisturizer"
+        - usage_tips: practical, numbered implicitly, tailored to user experience_level
+        - warnings: critical safety issues only (not "may cause dryness")
+        - confidence_note: ONLY include if ingredients marked low_confidence or not_found in database
+
+        JSON SCHEMA COMPLIANCE:
+        Your output must match the schema provided exactly. All required fields must be present. Optional fields (e.g., climate_note, pregnancy_note) are included only when relevant.
     """).strip()
 
-    # ── FEATURE 1: Individual Product Prompt ──────────────────────────────
+    # Build prompt for individual product report
     @staticmethod
     def build_individual_prompt(
         product_name    : str,
         ingredient_names: List[str],
         user_profile    : UserProfile,
         calc_output     : Dict,
-        nlp_mapped      : List[Dict],   # list of {input, inci_name, confidence}
+        nlp_mapped      : List[Dict],
     ) -> str:
 
-        # Compress calc output — only what LLM needs
         score   = calc_output.get("compatibility_score", 0)
         grade   = calc_output.get("grade", "?")
         verdict = calc_output.get("verdict", "")
@@ -210,19 +212,17 @@ class PromptBuilder:
         warns   = calc_output.get("warnings", [])
         details = calc_output.get("ingredient_details", [])
 
-        # Compress ingredient details — top 6 by score impact
         details_sorted = sorted(details, key=lambda x: abs(x.get("score", 50) - 50), reverse=True)[:6]
         ing_summary = []
         for d in details_sorted:
             p_str = "; ".join(d.get("pros", [])[:1])
             c_str = "; ".join(d.get("cons", [])[:1])
             ing_summary.append(
-                f"{d['ingredient']}: score={d['score']}"
-                + (f", benefit={p_str}" if p_str else "")
-                + (f", concern={c_str}"  if c_str else "")
+                f"{d['ingredient']}: score={d['score']}" +
+                (f", benefit={p_str}" if p_str else "") +
+                (f", concern={c_str}" if c_str else "")
             )
 
-        # NLP confidence flags
         low_conf = [m["input"] for m in nlp_mapped if m.get("confidence") in ("low", "uncertain")]
         not_found= calc_output.get("not_found", [])
 
@@ -263,7 +263,7 @@ class PromptBuilder:
 
         return prompt
 
-    # ── FEATURE 2: Layering Report Prompt ─────────────────────────────────
+    # Build prompt for layering report
     @staticmethod
     def build_layering_prompt(
         product_a_name  : str,
@@ -287,16 +287,14 @@ class PromptBuilder:
         warns   = layering_output.get("warnings", [])
         pairs   = layering_output.get("pair_interactions", [])
 
-        # Compress pair interactions — only show meaningful ones
         pair_lines = []
         for p in pairs[:6]:
             itype = p.get("interaction_type", "unknown")
-            ia    = p.get("ingredient_a", "")
-            ib    = p.get("ingredient_b", "")
+            ia = p.get("ingredient_a", "")
+            ib = p.get("ingredient_b", "")
             notes = p.get("notes", "")[:60]
             pair_lines.append(f"{ia} + {ib} = {itype}" + (f" | {notes}" if notes else ""))
 
-        # NLP gaps
         low_conf_a = [m["input"] for m in nlp_mapped_a if m.get("confidence") in ("low","uncertain")]
         low_conf_b = [m["input"] for m in nlp_mapped_b if m.get("confidence") in ("low","uncertain")]
         not_found_a= layering_output.get("product_a_not_found", [])
@@ -349,12 +347,10 @@ class PromptBuilder:
         return prompt
 
 
-# =============================================================================
-# GEMINI CLIENT
-# =============================================================================
+# Gemini Integration
 
 class GeminiClient:
-    """Thin wrapper around google-genai for SkinSpectra report generation."""
+    """Manages communication with Gemini API for structured report generation."""
 
     def __init__(self, api_key: Optional[str] = None):
         key = api_key or os.environ.get("GEMINI_API_KEY", "")
@@ -373,10 +369,7 @@ class GeminiClient:
         log.info(f"GeminiClient initialised | model={GEMINI_MODEL}")
 
     def generate(self, user_prompt: str) -> Dict:
-        """
-        Send prompt to Gemini, parse JSON response.
-        Returns parsed dict + metadata.
-        """
+        """Send prompt to Gemini and parse JSON response. Returns report dict with metadata."""
         t0 = time.perf_counter()
         try:
             response = self._client.models.generate_content(
@@ -387,14 +380,12 @@ class GeminiClient:
             raw_text = response.text.strip()
             latency  = round((time.perf_counter() - t0) * 1000, 1)
 
-            # Strip markdown fences if model added them despite instructions
             raw_text = re.sub(r"^```(?:json)?\s*", "", raw_text)
             raw_text = re.sub(r"\s*```$",          "", raw_text)
             raw_text = raw_text.strip()
 
             parsed = json.loads(raw_text)
 
-            # Usage stats
             usage = {}
             if hasattr(response, "usage_metadata") and response.usage_metadata:
                 um = response.usage_metadata
@@ -435,49 +426,23 @@ class GeminiClient:
             }
 
 
-# =============================================================================
-# LLM LAYER — MAIN INTERFACE
-# =============================================================================
+# LLM Layer - Main Interface
 
 class LLMLayer:
-    """
-    Top-level interface for the SkinSpectra LLM layer.
-    Takes outputs from NLP + Calculation layers and produces
-    structured JSON reports via Gemini 2.5 Flash.
-
-    Usage — Feature 1 (Individual Product):
-    ----------------------------------------
-    llm = LLMLayer(api_key="...")
-    result = llm.generate_individual_report(
-        product_name     = "The Ordinary Niacinamide 10%",
-        ingredient_names = ["Niacinamide", "Zinc PCA", "Glycerin"],
-        user_profile     = UserProfile(
-            skin_type="oily", concerns=["acne","pores"],
-            age_group="adult", is_pregnant=False
-        ),
-        calc_output  = <output from CompatibilityScorer.score(...)>,
-        nlp_mapped   = <output from INCIMapper.batch_map(...)>,
-    )
-
-    Usage — Feature 2 (Product Layering):
-    ---------------------------------------
-    result = llm.generate_layering_report(
-        product_a_name  = "Vitamin C Serum",
-        product_a_ings  = ["Ascorbic Acid", "Ferulic Acid"],
-        product_b_name  = "Retinol Night Cream",
-        product_b_ings  = ["Retinol", "Ceramide NP"],
-        user_profile    = UserProfile(...),
-        layering_output = <output from LayeringScorer.score(...)>,
-        nlp_mapped_a    = <output from INCIMapper.batch_map(product_a_ings)>,
-        nlp_mapped_b    = <output from INCIMapper.batch_map(product_b_ings)>,
-    )
+    """Main interface for generating personalized skincare reports via Gemini.
+    
+    Features:
+    - Feature 1: Individual product compatibility assessment
+    - Feature 2: Product layering (2-product combination) assessment
+    
+    Integrates NLP-mapped ingredients, compatibility scores, and user profiles
+    to produce structured JSON reports.
     """
 
     def __init__(self, api_key: Optional[str] = None):
         self.client  = GeminiClient(api_key=api_key)
         self.builder = PromptBuilder()
 
-    # ------------------------------------------------------------------
     def generate_individual_report(
         self,
         product_name    : str,
@@ -486,28 +451,17 @@ class LLMLayer:
         calc_output     : Dict,
         nlp_mapped      : Optional[List[Dict]] = None,
     ) -> Dict:
-        """
-        Generate a personalised individual product compatibility report.
-
-        Parameters
-        ----------
-        product_name     : Display name of the product
-        ingredient_names : List of INCI (or raw) ingredient names
-        user_profile     : UserProfile dataclass
-        calc_output      : Output dict from CompatibilityScorer.score()
-        nlp_mapped       : Output list from INCIMapper.batch_map() [optional]
-
-        Returns
-        -------
-        {
-          "success"      : bool,
-          "report"       : dict (JSON report matching INDIVIDUAL_REPORT_SCHEMA),
-          "latency_ms"   : float,
-          "usage"        : dict (token counts),
-          "feature"      : "individual",
-          "product_name" : str,
-          "score"        : float,
-        }
+        """Generate personalized individual product compatibility report.
+        
+        Args:
+            product_name: Product display name
+            ingredient_names: List of ingredient names
+            user_profile: UserProfile instance
+            calc_output: Compatibility score output from calculation engine
+            nlp_mapped: Optional NLP mapping output for confidence tracking
+        
+        Returns:
+            Dict with keys: success, report, latency_ms, usage, feature, product_name, score, error (if applicable)
         """
         nlp_mapped = nlp_mapped or []
 
@@ -540,7 +494,6 @@ class LLMLayer:
 
         return result
 
-    # ------------------------------------------------------------------
     def generate_layering_report(
         self,
         product_a_name  : str,
@@ -552,31 +505,19 @@ class LLMLayer:
         nlp_mapped_a    : Optional[List[Dict]] = None,
         nlp_mapped_b    : Optional[List[Dict]] = None,
     ) -> Dict:
-        """
-        Generate a personalised product layering compatibility report.
-
-        Parameters
-        ----------
-        product_a_name   : Display name of product A (applied first)
-        product_a_ings   : Ingredient list of product A
-        product_b_name   : Display name of product B (applied second)
-        product_b_ings   : Ingredient list of product B
-        user_profile     : UserProfile dataclass
-        layering_output  : Output dict from LayeringScorer.score()
-        nlp_mapped_a/b   : Output from INCIMapper.batch_map() [optional]
-
-        Returns
-        -------
-        {
-          "success"        : bool,
-          "report"         : dict (JSON report matching LAYERING_REPORT_SCHEMA),
-          "latency_ms"     : float,
-          "usage"          : dict,
-          "feature"        : "layering",
-          "product_a_name" : str,
-          "product_b_name" : str,
-          "score"          : float,
-        }
+        """Generate personalized product layering (combination) compatibility report.
+        
+        Args:
+            product_a_name: Product A name (applied first)
+            product_a_ings: Product A ingredient list
+            product_b_name: Product B name (applied second)
+            product_b_ings: Product B ingredient list
+            user_profile: UserProfile instance
+            layering_output: Layering compatibility score from calculation engine
+            nlp_mapped_a/b: Optional NLP mapping outputs for confidence tracking
+        
+        Returns:
+            Dict with keys: success, report, latency_ms, usage, feature, product_a_name, product_b_name, score, error (if applicable)
         """
         nlp_mapped_a = nlp_mapped_a or []
         nlp_mapped_b = nlp_mapped_b or []
@@ -616,12 +557,10 @@ class LLMLayer:
         return result
 
 
-# =============================================================================
-# MOCK CALC OUTPUTS (for standalone testing without trained models)
-# =============================================================================
+# Test Utilities
 
 def mock_individual_calc_output(score: float = 82.0) -> Dict:
-    """Returns a realistic mock CompatibilityScorer output for testing."""
+    """Generate mock individual product compatibility score for testing."""
     return {
         "compatibility_score": score,
         "grade": "A" if score >= 85 else "B+" if score >= 78 else "B" if score >= 70 else "C",
@@ -668,7 +607,7 @@ def mock_individual_calc_output(score: float = 82.0) -> Dict:
 
 
 def mock_layering_calc_output(score: float = 88.0) -> Dict:
-    """Returns a realistic mock LayeringScorer output for testing."""
+    """Generate mock layering compatibility score for testing."""
     return {
         "layering_score"    : score,
         "grade"             : "A" if score >= 85 else "B+" if score >= 78 else "B",
@@ -711,7 +650,7 @@ def mock_layering_calc_output(score: float = 88.0) -> Dict:
 
 
 def mock_nlp_output(names: List[str]) -> List[Dict]:
-    """Returns mock NLP mapper output."""
+    """Generate mock NLP ingredient mapping output for testing."""
     return [
         {
             "input"       : name,
@@ -726,9 +665,7 @@ def mock_nlp_output(names: List[str]) -> List[Dict]:
     ]
 
 
-# =============================================================================
-# MAIN — DEMO / QUICK TEST
-# =============================================================================
+# Demo / Testing
 
 if __name__ == "__main__":
     import argparse
@@ -749,10 +686,10 @@ if __name__ == "__main__":
     llm     = LLMLayer(api_key=args.api_key)
     outputs = {}
 
-    # ── Demo 1: Individual Product ─────────────────────────────────────
+    # Demo 1: Individual Product Report
     if args.feature in ("individual", "both"):
         print("\n" + "="*60)
-        print("  DEMO 1: Individual Product Report")
+        print("Individual Product Report Demo")
         print("="*60)
 
         profile = UserProfile(
@@ -786,10 +723,10 @@ if __name__ == "__main__":
 
         outputs["individual"] = result
 
-    # ── Demo 2: Layering Report ────────────────────────────────────────
+    # Demo 2: Product Layering Report
     if args.feature in ("layering", "both"):
         print("\n" + "="*60)
-        print("  DEMO 2: Product Layering Report")
+        print("Product Layering Report Demo")
         print("="*60)
 
         profile2 = UserProfile(
@@ -827,8 +764,6 @@ if __name__ == "__main__":
             print(f"FAILED: {result2['error']}")
 
         outputs["layering"] = result2
-
-    # ── Save outputs ───────────────────────────────────────────────────
     with open(args.output, "w", encoding="utf-8") as f:
         # Save only report fields (not raw text) to keep file clean
         save = {}
