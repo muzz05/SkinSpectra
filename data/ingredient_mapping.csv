@@ -161,7 +161,7 @@ Polyacrylamide,PAM|Acrylamide Polymer,Sepigel 305|Simulgel 600,9003-05-8,Thicken
 Sodium Polyacrylate,Carbopol Aqua SF-1|Acrylates Copolymer,Carbopol Aqua|Salcare SC91,9003-04-7,Thickener/Absorbent,Texture/Super-absorbent,Sodium Salt of Polyacrylic Acid|SAP,Polyacrylate de Sodium
 Agar,Agar-Agar|Gelidium Amansii Extract|E406,Agar Bacteriological|Iberia Agar,9002-18-0,Gelling Agent,Texture/Gelling,Red Algae Polysaccharide|Agarose,Agar|Agar-Agar
 Carrageenan,Irish Moss Extract|E407|Carragheen,Genuvisco|Viscarin,9000-07-1,Thickener/Gelling Agent,Texture/Stability,Red Seaweed Polysaccharide|Carrageenin,Carraghénane|Carragenina
-Parfum,Fragrance|Perfume|Aroma,Givaudan|IFF Fragrance,None,Fragrance,Sensory/Masking,Aroma|Fragrance Compound|Scent blend,Parfum|Fragancia|Parfüm
+Parfum,Fragrance|Perfume|Aroma,Givaudan|IFF Fragrance,,Fragrance,Sensory/Masking,Aroma|Fragrance Compound|Scent blend,Parfum|Fragancia|Parfüm
 Lavender Extract,Lavandula Angustifolia Extract|True Lavender,Lavandula Angustifolia|Biolandes,84776-65-8,Soothing/Fragrance,Soothing/Anti-inflammatory/Fragrance,Lavender Essential Oil|Lavandula Extract,Extrait de Lavande|Extracto de Lavanda
 Rose Extract,Rosa Damascena Extract|Rose Hip Extract,Bulgarian Rose Extract|Rosa Damascena,84604-12-6,Soothing/Antioxidant,Soothing/Antioxidant/Fragrance,Damask Rose Extract|Rosa Extract,Extrait de Rose|Extracto de Rosa
 Turmeric Extract,Curcuma Longa Extract|Curcumin,Curcumin 95%|Turmeric CO2,8024-37-1,Antioxidant/Anti-inflammatory,Antioxidant/Brightening/Anti-inflammatory,Curcuma Extract|Curcuminoid,Extrait de Curcuma|Extracto de Cúrcuma
@@ -183,12 +183,12 @@ Hyaluronan,Hyaluronic Acid polymer|Sodium Hyaluronate HMW,Hyal-Joint|ProBalancer
 Polyglutamic Acid,Gamma-Polyglutamic Acid|PGA|Gamma-PGA,Vegebead|PGA Cosmetic,25513-46-6,Humectant/Film Former,Deep moisturizing/Film forming,Poly-L-Glutamic Acid|PGA polymer,Acide Polyglutamique
 Sodium Gluconate,Gluconic Acid Sodium Salt|Gluconate Na,Gluconat Sodium|Gluconic Acid Na Salt,527-07-1,Chelating/Humectant,Metal chelation/Moisturizing,Sodium D-Gluconate|Gluconic Acid Sodium,Gluconate de Sodium
 Sea Salt,Sodium Chloride|Marine Salt|Dead Sea Salt,Dead Sea Salt|Celtic Sea Salt,7647-14-5,Texture/Mineral,Exfoliating/Mineral supply/Osmotic,NaCl|Table Salt,Sel Marin|Sal Marina
-Snail Secretion Filtrate,Snail Mucin|Snail Slime|ESCARGOT filtrate,COSRX Snail|Biopeptide Snail,None,Soothing/Repair Active,Repair/Moisturizing/Anti-aging/Soothing,Snail Secretome|Helix Aspersa Filtrate,Filtrat de Sécrétions d'Escargot|Filtrado de Secreción de Caracol
+Snail Secretion Filtrate,Snail Mucin|Snail Slime|ESCARGOT filtrate,COSRX Snail|Biopeptide Snail,,Soothing/Repair Active,Repair/Moisturizing/Anti-aging/Soothing,Snail Secretome|Helix Aspersa Filtrate,Filtrat de Sécrétions d'Escargot|Filtrado de Secreción de Caracol
 Beta-Glucan,"Oat Beta Glucan|1,3-1,6-Beta-D-glucan|Saccharide",Betacare|Oat Beta-Glucan,9041-22-9,Humectant/Soothing Active,Moisturizing/Soothing/Immune support,Oat polysaccharide|Yeast glucan|Laminarin,Bêta-Glucane|Beta-Glucano
 Ectoin,"L-Ectoin|1,4,5,6-Tetrahydro-2-methyl-4-pyrimidinecarboxylic acid",Pentacare-HP|Ectoin Natural,96702-03-3,Soothing/Protective Active,Anti-inflammatory/Barrier/DNA protection,Tetrahydromethylpyrimidine carboxylic acid|THMPCA,Ectoine|Ectoína
-Galactomyces Ferment Filtrate,Galactomyces|Pitera|Yeast Ferment,SK-II Pitera|Galactomyces 95 Tone Essence,None,Brightening/Anti-aging Active,Brightening/Pore minimizing/Skin texture,Saccharomycopsis Ferment Filtrate|Galactomyces Extract,Filtrat de Galactomyces|Filtrado de Galactomyces
-Bifida Ferment Lysate,Probiotic Lysate|Bifidobacterium Ferment,Lancôme Bifida|Bifida Filtratum,None,Probiotic/Barrier Active,Skin microbiome/Barrier/Anti-aging,Bifidobacterium Lysate|Lactobacillus Ferment Lysate,Lysat de Ferment Bifida|Lisado de Bifida Fermentado
-Saccharomyces Ferment Filtrate,Yeast Ferment|SAF|Fermented Yeast Extract,Pitera SK-II|BioEcolia,None,Probiotic/Moisturizing,Microbiome support/Moisturizing/Antioxidant,Yeast Ferment|Saccharomyces Extract filtrate,Filtrat de Ferment de Saccharomyces
+Galactomyces Ferment Filtrate,Galactomyces|Pitera|Yeast Ferment,SK-II Pitera|Galactomyces 95 Tone Essence,,Brightening/Anti-aging Active,Brightening/Pore minimizing/Skin texture,Saccharomycopsis Ferment Filtrate|Galactomyces Extract,Filtrat de Galactomyces|Filtrado de Galactomyces
+Bifida Ferment Lysate,Probiotic Lysate|Bifidobacterium Ferment,Lancôme Bifida|Bifida Filtratum,,Probiotic/Barrier Active,Skin microbiome/Barrier/Anti-aging,Bifidobacterium Lysate|Lactobacillus Ferment Lysate,Lysat de Ferment Bifida|Lisado de Bifida Fermentado
+Saccharomyces Ferment Filtrate,Yeast Ferment|SAF|Fermented Yeast Extract,Pitera SK-II|BioEcolia,,Probiotic/Moisturizing,Microbiome support/Moisturizing/Antioxidant,Yeast Ferment|Saccharomyces Extract filtrate,Filtrat de Ferment de Saccharomyces
 Propolis Extract,Bee Glue Extract|Propolis Resin,Propolis 70|Korean Propolis,85586-97-6,Antioxidant/Antimicrobial Active,Antimicrobial/Antioxidant/Soothing,Bee Propolis|Propoleum,Extrait de Propolis|Extracto de Propóleo
 Artemisia Vulgaris Extract,Mugwort Extract|Wormwood Extract|Ssuk Extract,COSRX Mugwort|Round Lab Mugwort,8022-37-5,Soothing Active,Soothing/Anti-inflammatory/Barrier,Mugwort|Moxa Herb Extract|Korean Ssuk,Extrait d'Armoise|Extracto de Artemisia
 Tea Tree Oil,Melaleuca Alternifolia Leaf Oil|TTO,Thursday Plantation TTO|The Body Shop Tea Tree,68647-73-4,Antimicrobial Active,Antimicrobial/Anti-acne/Anti-inflammatory,Melaleuca Oil|Ti Tree Oil,Huile de Théier|Aceite del Árbol del Té
@@ -238,11 +238,11 @@ Isocetyl Stearate,Isocetyl Stearate|Crodamol CS,Crodamol CS|Estalan CS,25339-09-
 Hydrogenated Lecithin,Hydrogenated Soy Lecithin|Lecinol S-10,Lecinol S-10|Emulmetik 300,92128-87-5,Emulsifier/Barrier,Emulsification/Barrier support,Hydrogenated Phospholipid|Soy Phospholipid,Lécithine Hydrogénée|Lecitina Hidrogenada
 Tremella Fuciformis Extract,Snow Mushroom Extract|White Fungus,Tremella|SnowMushroom Extract,71010-52-1,Humectant/Antioxidant,Deep moisturizing/Antioxidant/Anti-aging,Snow Fungus|White Jelly Mushroom,Extrait de Trémelle|Extracto de Tremella
 Reishi Mushroom Extract,Ganoderma Lucidum Extract|Lingzhi,Ganoderma Extract|Reishi Mushroom,93164-13-7,Antioxidant/Adaptogen,Antioxidant/Anti-aging/Immune support,Lingzhi Extract|Ganoderma Polysaccharides,Extrait de Reishi|Extracto de Reishi
-Chaga Mushroom Extract,Inonotus Obliquus Extract|Chaga,Chaga Mushroom|Inonotus Extract,None,Antioxidant Active,Antioxidant/Anti-inflammatory/Anti-aging,Birch Fungus|Clinker Polypore,Extrait de Chaga|Extracto de Chaga
+Chaga Mushroom Extract,Inonotus Obliquus Extract|Chaga,Chaga Mushroom|Inonotus Extract,,Antioxidant Active,Antioxidant/Anti-inflammatory/Anti-aging,Birch Fungus|Clinker Polypore,Extrait de Chaga|Extracto de Chaga
 Laminaria Extract,Laminaria Digitata Extract|Brown Algae|Kelp,Algaktiv|Laminaria Extract,84696-13-9,Antioxidant/Moisturizing,Antioxidant/Detox/Moisturizing,Kelp Extract|Brown Seaweed|Laminaria,Extrait de Laminaire|Extracto de Laminaria
 Fucus Vesiculosus Extract,Bladderwrack Extract|Brown Seaweed,Fucus Extract|Seaweed Absolute,84696-13-9,Antioxidant/Slimming Active,Antioxidant/Anti-cellulite/Detox,Bladderwrack|Rockweed Extract,Extrait de Fucus|Extracto de Fucus
 Isosorbide Dimethyl Ether,DMI|Dimethyl Isosorbide,Arlasolve DMI|Isosorbide Dimethyl,5306-85-4,Penetration Enhancer/Solvent,Penetration enhancement/Active delivery,DMI Solvent|Isosorbide Dimethyl,Diméthyl Isosorbide|DMI
-Methylsulfonylmethane,MSM|Dimethyl Sulfone|DMSO2,OptiMSM|MSM Cosmetic,67-71-0,Anti-inflammatory Active,Anti-inflammatory/Soothing/Collagen support,"Dimethyl sulfone|Methyl sulfone|DMSO2",Méthylsulfonylméthane|MSM
+Methylsulfonylmethane,MSM|Dimethyl Sulfone|DMSO2,OptiMSM|MSM Cosmetic,67-71-0,Anti-inflammatory Active,Anti-inflammatory/Soothing/Collagen support,Dimethyl sulfone|Methyl sulfone|DMSO2,Méthylsulfonylméthane|MSM
 Zinc Gluconate,Zinc Gluconate USP|Zinc Salt,Zinc Gluconate|ZincClear,4468-02-4,Antimicrobial/Sebum control,Anti-acne/Sebum control/Zinc delivery,Zinc D-Gluconate|Gluconic Acid Zinc Salt,Gluconate de Zinc|Gluconato de Zinc
 Niacinamide Methylether,NME|Methyl Nicotinamide,N-Methyl Nicotinamide|MNA,114-33-0,Anti-aging/Brightening Active,Anti-aging/Brightening/Antioxidant,1-Methylnicotinamide|MNA,Méthylamide de Niacine
 Isoflavones,Soy Isoflavones|Genistein|Daidzein,Novasoy|PhytoSoy,446-72-0,Phytoestrogen/Anti-aging,Anti-aging/Brightening/Antioxidant,Genistein|Daidzein|Phytoestrogen,Isoflavones|Isoflavonas
@@ -271,3 +271,24 @@ Polyglyceryl-3 Diisostearate,Triglycerol Diisostearate|PG-3 Diisostearate,Lamefo
 Sodium Lauroyl Lactylate,SLL|Sodium Lauryl Lactylate|Lauroyl Lactic Acid Sodium Salt,Pationic SL|Stepan SLL,13557-75-0,Emulsifier/Mild Surfactant,Emulsification/Gentle cleansing/Skin conditioning,Sodium N-Lauroyl Lactate|Sodium Lauroyllactate,Lauroyl Lactylate de Sodium|Lauroil Lactilato Sódico
 Potassium Phosphate,Monopotassium Phosphate|MKP|KH2PO4,Potassium Phosphate Monobasic USP|MKP Food Grade,7778-77-0,pH Adjuster/Buffer,pH Buffering/Electrolyte balance/Stabilizer,Potassium Dihydrogen Phosphate|Monopotassium Monophosphate,Phosphate de Potassium|Fosfato de Potasio
 Dipotassium Phosphate,DKP|Dipotassium Hydrogen Phosphate|K2HPO4,Dipotassium Phosphate Anhydrous|DKP Food Grade,7758-11-4,pH Adjuster/Buffer,pH Buffering/Electrolyte balance/Stabilizer,Dipotassium Monohydrogen Phosphate|Potassium Phosphate Dibasic,Phosphate Dipotassique|Fosfato Dipotásico
+Alpha-Arbutin,Alpha-Arbutin,,N/A,Brightening Active,Tyrosinase Inhibition,,
+Jojoba Esters,Jojoba Esters,,N/A,Emollient,Barrier Support,,
+Avena Sativa (Oat) Kernel Extract,Avena Sativa (Oat) Kernel Extract,,N/A,Botanical Soothing,Anti-Inflammatory,,
+Colloidal Oatmeal,Colloidal Oatmeal,,N/A,Soothing Protectant,Barrier Protection,,
+Glycyrrhiza Glabra (Licorice) Root Extract,Glycyrrhiza Glabra (Licorice) Root Extract,,N/A,Botanical Brightening,Anti-Inflammatory Brightening,,
+Potassium Azeloyl Diglycinate,Potassium Azeloyl Diglycinate,,N/A,Sebum Regulating Active,Brightening Sebum Control,,
+N-Acetyl Glucosamine,N-Acetyl Glucosamine,,N/A,Barrier Brightening Active,Barrier and Pigment Modulation,,
+Acetyl Hexapeptide-8,Acetyl Hexapeptide-8,,N/A,Peptide,Expression Line Softening,,
+Lactobacillus Ferment,Lactobacillus Ferment,,N/A,Postbiotic/Ferment,Microbiome Support,,
+Hydroxyethyl Urea,Hydroxyethyl Urea,,N/A,Humectant,Hydration,,
+Succinic Acid,Succinic Acid,,N/A,Acid Active,Anti-Blemish,,
+Capryloyl Salicylic Acid,Capryloyl Salicylic Acid,,N/A,LHA Exfoliant,Comedolytic Exfoliation,,
+Dipotassium Glycyrrhizate,Dipotassium Glycyrrhizate,,N/A,Soothing Active,Anti-Inflammatory,,
+Tetrahexyldecyl Ascorbate,Tetrahexyldecyl Ascorbate,,N/A,Vitamin C Derivative,Antioxidant Brightening,,
+Acetyl Tetrapeptide-5,Acetyl Tetrapeptide-5,,N/A,Peptide,Periorbital Puffiness Support,,
+Oligopeptide-1,Oligopeptide-1,,N/A,Growth Factor Peptide,Repair Signaling,,
+Tripeptide-1,Tripeptide-1,,N/A,Peptide,Collagen Support,,
+Carnosine,Carnosine,,N/A,Anti-Glycation Active,Antioxidant and Firmness Support,,
+Glyceryl Glucoside,Glyceryl Glucoside,,N/A,Humectant,Aquaporin Hydration Support,,
+Xylitylglucoside,Xylitylglucoside,,N/A,Humectant Sugar Complex,Barrier Hydration,,
+Anhydroxylitol,Anhydroxylitol,,N/A,Humectant Sugar Complex,Moisture Reservoir Support,,

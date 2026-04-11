@@ -1,0 +1,114 @@
+{
+  "generated_at_epoch": 1775932891,
+  "source": "components/model_comparison.py",
+  "individual": {
+    "task": "individual",
+    "samples": 800,
+    "random_seed": 42,
+    "results": [
+      {
+        "model": "Linear Regression",
+        "mae": 2.2743,
+        "rmse": 3.0884,
+        "r2": 0.9464,
+        "train_time_s": 0.015,
+        "infer_us_per_sample": 4.27
+      },
+      {
+        "model": "Gradient Boosting (sklearn)",
+        "mae": 2.5324,
+        "rmse": 3.2271,
+        "r2": 0.9415,
+        "train_time_s": 0.561,
+        "infer_us_per_sample": 5.25
+      },
+      {
+        "model": "Random Forest",
+        "mae": 2.5355,
+        "rmse": 3.316,
+        "r2": 0.9382,
+        "train_time_s": 0.85,
+        "infer_us_per_sample": 109.08
+      },
+      {
+        "model": "XGBoost (SkinSpectra)",
+        "mae": 3.0007,
+        "rmse": 3.8452,
+        "r2": 0.917,
+        "train_time_s": 0.44,
+        "infer_us_per_sample": 27.09
+      },
+      {
+        "model": "SVR (RBF)",
+        "mae": 4.2309,
+        "rmse": 6.3428,
+        "r2": 0.774,
+        "train_time_s": 0.049,
+        "infer_us_per_sample": 101.49
+      },
+      {
+        "model": "KNN (k=5)",
+        "mae": 7.3557,
+        "rmse": 9.2696,
+        "r2": 0.5174,
+        "train_time_s": 0.002,
+        "infer_us_per_sample": 13987.97
+      }
+    ]
+  },
+  "layering": {
+    "task": "layering",
+    "samples": 800,
+    "random_seed": 42,
+    "results": [
+      {
+        "model": "Linear Regression",
+        "mae": 2.8341,
+        "rmse": 3.3885,
+        "r2": 0.9836,
+        "train_time_s": 0.011,
+        "infer_us_per_sample": 5.1
+      },
+      {
+        "model": "Random Forest",
+        "mae": 2.79,
+        "rmse": 3.4136,
+        "r2": 0.9833,
+        "train_time_s": 0.634,
+        "infer_us_per_sample": 118.73
+      },
+      {
+        "model": "Gradient Boosting (sklearn)",
+        "mae": 2.8231,
+        "rmse": 3.416,
+        "r2": 0.9833,
+        "train_time_s": 0.386,
+        "infer_us_per_sample": 4.78
+      },
+      {
+        "model": "LightGBM (SkinSpectra)",
+        "mae": 2.9637,
+        "rmse": 3.589,
+        "r2": 0.9816,
+        "train_time_s": 0.167,
+        "infer_us_per_sample": 41.29
+      },
+      {
+        "model": "SVR (RBF)",
+        "mae": 6.1816,
+        "rmse": 8.125,
+        "r2": 0.9056,
+        "train_time_s": 0.048,
+        "infer_us_per_sample": 105.53
+      },
+      {
+        "model": "KNN (k=5)",
+        "mae": 12.4219,
+        "rmse": 15.3731,
+        "r2": 0.6622,
+        "train_time_s": 0.002,
+        "infer_us_per_sample": 50.0
+      }
+    ]
+  }
+}

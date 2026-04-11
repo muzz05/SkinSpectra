@@ -2110,7 +2110,22 @@ async function analyzeProduct() {
         headline          : d.llm_report.headline          || d.llm_report.title || '',
         verdict           : d.llm_report.verdict           || d.llm_report.summary || '',
         usage_tips        : d.llm_report.usage_tips        || d.llm_report.tips   || [],
-        concerns_addressed: d.llm_report.concerns_addressed|| [],
+        concerns_addressed: (() => {
+          const explicit = Array.isArray(d.llm_report.concerns_addressed)
+            ? d.llm_report.concerns_addressed.map(String).filter(Boolean)
+            : [];
+          if (explicit.length) return explicit.slice(0, 4);
+
+          const coverage = (d.llm_report.concern_coverage || [])
+            .map(c => typeof c === 'string' ? c : (c.concern || ''))
+            .filter(Boolean);
+          if (coverage.length) return coverage.slice(0, 4);
+
+          return (d.llm_report.key_benefits || [])
+            .map(b => b.concern || b.relevance_to_user || b.benefit || '')
+            .filter(Boolean)
+            .slice(0, 4);
+        })(),
         skin_fit_rating   : d.llm_report.skin_fit_rating   || 'Good',
       } : null,
     };

@@ -50,6 +50,7 @@ Env vars
 import os
 import sys
 import time
+import json
 import logging
 import traceback
 from contextlib import asynccontextmanager
@@ -575,6 +576,32 @@ async def health():
             "llm"      : "ready" if S.llm_ok        else "not_loaded",
             "facial"   : "ready" if S.facial_ok     else "not_loaded",
         },
+    }
+
+
+@app.get("/comparison/results", tags=["Info"],
+         summary="Model comparison results for CEP comparative analysis")
+async def comparison_results():
+    comp_path = _HERE / "models" / "comparison_results.json"
+    if not comp_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "comparison_results.json not found. "
+                "Run: python components/model_comparison.py --task both"
+            ),
+        )
+
+    try:
+        content = json.loads(comp_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to read comparison results: {exc}")
+
+    return {
+        "success": True,
+        "version": API_VERSION,
+        "latency_ms": 0.0,
+        "data": content,
     }
 
 

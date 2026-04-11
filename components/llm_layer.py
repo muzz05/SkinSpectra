@@ -49,9 +49,54 @@ log = logging.getLogger("skinspectra.llm")
 # Configuration
 
 GEMINI_MODEL   = "gemini-2.5-flash"
-MAX_OUT_TOKENS = 3000
+MAX_OUT_TOKENS = 4096
 TEMPERATURE    = 0.25
 TOP_P          = 0.90
+
+
+def _extract_and_repair_json(raw_text: str) -> Dict[str, Any]:
+    """
+    Multi-strategy JSON extraction and repair for LLM responses.
+    """
+    text = (raw_text or "").strip()
+
+    # Strategy 1: direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Strategy 2: strip markdown fences and parse
+    cleaned = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE | re.MULTILINE)
+    cleaned = re.sub(r"\s*```\s*$", "", cleaned, flags=re.MULTILINE).strip()
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        pass
+
+    # Strategy 3: extract outermost JSON object slice
+    start = cleaned.find("{")
+    end = cleaned.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            return json.loads(cleaned[start:end + 1])
+        except json.JSONDecodeError:
+            pass
+
+    # Strategy 4: try balancing truncated fragments
+    fragment = cleaned[start:] if start != -1 else cleaned
+    open_braces = fragment.count("{") - fragment.count("}")
+    open_brackets = fragment.count("[") - fragment.count("]")
+    if fragment.count('"') % 2 != 0:
+        fragment += '"'
+    fragment += "]" * max(0, open_brackets)
+    fragment += "}" * max(0, open_braces)
+    try:
+        return json.loads(fragment)
+    except json.JSONDecodeError:
+        pass
+
+    raise json.JSONDecodeError("All repair strategies failed", raw_text or "", 0)
 
 # User Profile
 
@@ -106,6 +151,9 @@ INDIVIDUAL_REPORT_SCHEMA = {
     ],
     "key_concerns"         : [
         {"concern": "str", "ingredient": "str", "severity": "str (low/medium/high/critical)"}
+    ],
+    "concerns_addressed"   : [
+        "str  (specific user concerns this product helps, e.g. 'acne', 'dark spots')"
     ],
     "warnings"             : ["str  (critical safety only)"],
     "ingredient_highlights": [
@@ -185,6 +233,7 @@ class PromptBuilder:
         FIELD-SPECIFIC RULES:
         - headline: punchy, ≤15 words, no filler adjectives
         - summary: 2-3 personalized sentences tied to user's skin_type and concerns
+        - concerns_addressed: include 1-4 concerns from the user's concern list that are genuinely supported by the provided data
         - routine_integration: specific steps—"apply after cleanser, wait 2 min, then moisturizer"
         - usage_tips: practical, numbered implicitly, tailored to user experience_level
         - warnings: critical safety issues only (not "may cause dryness")
@@ -365,6 +414,7 @@ class GeminiClient:
             temperature        = TEMPERATURE,
             top_p              = TOP_P,
             max_output_tokens  = MAX_OUT_TOKENS,
+            response_mime_type = "application/json",
         )
         log.info(f"GeminiClient initialised | model={GEMINI_MODEL}")
 
@@ -380,11 +430,7 @@ class GeminiClient:
             raw_text = response.text.strip()
             latency  = round((time.perf_counter() - t0) * 1000, 1)
 
-            raw_text = re.sub(r"^```(?:json)?\s*", "", raw_text)
-            raw_text = re.sub(r"\s*```$",          "", raw_text)
-            raw_text = raw_text.strip()
-
-            parsed = json.loads(raw_text)
+            parsed = _extract_and_repair_json(raw_text)
 
             usage = {}
             if hasattr(response, "usage_metadata") and response.usage_metadata:
@@ -405,11 +451,11 @@ class GeminiClient:
 
         except json.JSONDecodeError as e:
             latency = round((time.perf_counter() - t0) * 1000, 1)
-            log.error(f"JSON parse error: {e}")
-            log.error(f"Raw response: {raw_text[:500]}")
+            log.error(f"JSON parse error after all repair strategies: {e}")
+            log.error(f"Raw response (first 600 chars): {raw_text[:600]}")
             return {
                 "success"   : False,
-                "error"     : f"JSON parse failed: {e}",
+                "error"     : f"JSON parse failed after repair attempts: {e}",
                 "latency_ms": latency,
                 "raw"       : raw_text,
                 "usage"     : {},

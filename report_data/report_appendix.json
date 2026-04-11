@@ -1,0 +1,146 @@
+{
+  "abstract_keywords": [
+    "skincare AI",
+    "XGBoost",
+    "LightGBM",
+    "NLP ingredient normalization",
+    "FAISS semantic search",
+    "EfficientNetV2",
+    "Gemini LLM",
+    "skin compatibility scoring"
+  ],
+  "system_architecture": {
+    "layers": [
+      "OCR Handler",
+      "NLP Layer (FAISS + sentence-transformers)",
+      "Calculation Layer (XGBoost/LightGBM)",
+      "LLM Layer (Gemini 2.5 Flash)",
+      "Facial Analysis (EfficientNetV2-B2)"
+    ],
+    "api_framework": "FastAPI",
+    "frontend": "Single-page HTML/JS",
+    "total_endpoints": 13
+  },
+  "algorithm_details": {
+    "individual_model": {
+      "type": "XGBoost Regressor",
+      "params": {
+        "n_estimators": 500,
+        "max_depth": 6,
+        "learning_rate": 0.05,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8
+      },
+      "dataset_size": 8000,
+      "features": [
+        "skin_type",
+        "concerns",
+        "age_group",
+        "pregnancy_flag",
+        "irritancy",
+        "comedogenicity",
+        "concentration_range",
+        "rule_score_components"
+      ],
+      "metrics": {
+        "mae": 2.6731,
+        "rmse": 3.3412,
+        "r2": 0.9338
+      }
+    },
+    "layering_model": {
+      "type": "LightGBM Regressor",
+      "params": {
+        "n_estimators": 600,
+        "learning_rate": 0.04,
+        "num_leaves": 63,
+        "subsample": 0.8
+      },
+      "dataset_size": 10000,
+      "metrics": {
+        "mae": 2.8587,
+        "rmse": 3.6076,
+        "r2": 0.9838
+      }
+    },
+    "nlp_model": {
+      "type": "Sentence Transformers + FAISS",
+      "base_model": "all-MiniLM-L6-v2",
+      "index_size": 272,
+      "similarity_threshold": 0.55
+    },
+    "facial_model": {
+      "type": "EfficientNetV2-B2",
+      "classes": [
+        "oily",
+        "dry",
+        "normal",
+        "combination",
+        "sensitive"
+      ],
+      "input_size": "260x260"
+    }
+  },
+  "complexity_analysis": {
+    "nlp_lookup": "Approximate nearest-neighbor search over FAISS index; near-sublinear retrieval in practice",
+    "individual_scoring": "Tree ensemble inference approx O(n_trees * depth)",
+    "layering_scoring": "Tree ensemble inference approx O(n_trees * leaves)",
+    "llm_generation": "Single remote API call with response size proportional to output tokens",
+    "ocr_extraction": "O(pixels) preprocessing and OCR pipeline",
+    "facial_analysis": "CNN forward-pass complexity proportional to model depth/width and image resolution"
+  },
+  "test_cases": [
+    {
+      "name": "Oily acne skin + Niacinamide 10%",
+      "expected_range": "0-100",
+      "category": "single product"
+    },
+    {
+      "name": "Sensitive skin + 15-ingredient barrier formula (no LLM)",
+      "expected_range": "<500ms",
+      "category": "performance"
+    },
+    {
+      "name": "Retinol + AHA layering",
+      "expected_range": "<50",
+      "category": "conflict"
+    },
+    {
+      "name": "Niacinamide + Hyaluronic Acid layering",
+      "expected_range": ">75",
+      "category": "synergy"
+    },
+    {
+      "name": "OCR clear label image",
+      "expected_range": ">=3 ingredients",
+      "category": "ocr"
+    },
+    {
+      "name": "Stress test 50 sequential product requests",
+      "expected_range": "0 failures, p95 tracked",
+      "category": "load"
+    }
+  ],
+  "comparative_systems": [
+    {
+      "system": "INCI Decoder",
+      "approach": "Rule-based ingredient lookup",
+      "limitation": "No ML scoring, no personalization"
+    },
+    {
+      "system": "CosDNA",
+      "approach": "Manual/community ratings",
+      "limitation": "No skin-profile matching"
+    },
+    {
+      "system": "Generic skincare apps",
+      "approach": "Simple ingredient blacklists",
+      "limitation": "No robust layering analysis"
+    },
+    {
+      "system": "SkinSpectra",
+      "approach": "ML + LLM + NLP + computer vision pipeline",
+      "advantage": "Personalized scoring + layering + LLM report"
+    }
+  ]
+}

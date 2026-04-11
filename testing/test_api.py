@@ -667,6 +667,146 @@ def t35():
 
 
 # =============================================================================
+# CEP TASK 6 SCENARIOS  (T36 – T44)
+# =============================================================================
+
+def t36():
+    r = R_("T36"); _hdr("T36","POST","/analyze/product","CEP: oily acne + 5 ingredients score in [0,100]")
+    resp, lat = _prod(
+        "CEP Oily Acne Test",
+        ["Niacinamide","Zinc PCA","Glycerin","Hyaluronic Acid","Panthenol"],
+        OILY_ACNE,
+        llm=False,
+    ); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    data = resp.json().get("data",{})
+    s = score_ok(data, "score", r)
+    chk(0 <= s <= 100, f"score {s} in [0,100]", r)
+    ALL.append(r); return r
+
+
+def t37():
+    r = R_("T37"); _hdr("T37","POST","/analyze/product","CEP: sensitive skin 15 ingredients no LLM < 500ms")
+    ings = [
+        "Aqua","Glycerin","Panthenol","Allantoin","Niacinamide","Ceramide NP","Ceramide AP",
+        "Ceramide EOP","Cholesterol","Sodium Hyaluronate","Squalane","Centella Asiatica Extract",
+        "Madecassoside","Betaine","Urea",
+    ]
+    resp, lat = _prod("CEP Sensitive 15", ings, SENSITIVE, llm=False); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    chk((lat * 1000) < 500, f"response time {(lat*1000):.1f}ms < 500ms", r)
+    ALL.append(r); return r
+
+
+def t38():
+    r = R_("T38"); _hdr("T38","POST","/analyze/layering","CEP: Retinol + AHA low score and conflict")
+    resp, lat = _layer(
+        "Retinol Serum", ["Retinol","Squalane","Tocopherol"],
+        "AHA Exfoliant", ["Glycolic Acid","Lactic Acid","Aqua"],
+        SENSITIVE, "PM", False,
+    ); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    data = resp.json().get("data",{})
+    s = score_ok(data, "score", r)
+    chk(s < 50, f"layering score {s} < 50", r)
+    interactions = data.get("layering",{}).get("pair_interactions",[])
+    has_conflict = any(i.get("interaction_type","").lower() in ("caution","conflicting","avoid") for i in interactions)
+    chk(has_conflict, "conflict/caution detected", r)
+    ALL.append(r); return r
+
+
+def t39():
+    r = R_("T39"); _hdr("T39","POST","/analyze/layering","CEP: Niacinamide + HA high score > 75")
+    resp, lat = _layer(
+        "Niacinamide Serum", ["Niacinamide","Panthenol","Zinc PCA"],
+        "HA Serum", ["Hyaluronic Acid","Sodium Hyaluronate","Glycerin"],
+        OILY_ACNE, "AM", False,
+    ); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    s = score_ok(resp.json().get("data",{}), "score", r)
+    chk(s > 75, f"layering score {s} > 75", r)
+    ALL.append(r); return r
+
+
+def t40():
+    r = R_("T40"); _hdr("T40","POST","/ocr/extract","CEP: OCR clear label >= 3 ingredients")
+    try:
+        with open("testing/dry_moisturizer.jpg", "rb") as fh:
+            t0 = time.perf_counter()
+            resp = requests.post(f"{BASE}/ocr/extract", files={"file":("dry_moisturizer.jpg", fh, "image/jpeg")}, timeout=120)
+            r.lat = time.perf_counter() - t0
+    except FileNotFoundError:
+        _fl("test image missing: testing/dry_moisturizer.jpg"); r.f += 1; ALL.append(r); return r
+    chk(resp.status_code == 200, "HTTP 200", r)
+    body = resp.json()
+    ings = body.get("ingredients") or body.get("data",{}).get("ingredients",[])
+    chk(isinstance(ings, list) and len(ings) >= 3, f"extracted >= 3 ingredients (got {len(ings) if isinstance(ings,list) else 0})", r)
+    ALL.append(r); return r
+
+
+def t41():
+    r = R_("T41"); _hdr("T41","POST","/analyze/skin-type","CEP: oily face photo predicted class valid")
+    try:
+        with open("testing/oily-face.webp", "rb") as fh:
+            t0 = time.perf_counter()
+            resp = requests.post(f"{BASE}/analyze/skin-type", files={"file":("oily-face.webp", fh, "image/webp")}, timeout=120)
+            r.lat = time.perf_counter() - t0
+    except FileNotFoundError:
+        _fl("test image missing: testing/oily-face.webp"); r.f += 1; ALL.append(r); return r
+    chk(resp.status_code == 200, "HTTP 200", r)
+    skin = resp.json().get("data",{}).get("skin_type","").lower()
+    chk(skin in ["oily","dry","normal","combination","sensitive","mature"], f"predicted skin_type valid ({skin})", r)
+    ALL.append(r); return r
+
+
+def t42():
+    r = R_("T42"); _hdr("T42","POST","/nlp/map/batch","CEP: 10 names resolution >= 80%")
+    names = [
+        "niacinamide","hyaluronic acid","retinol","vitamin c","salicylic acid",
+        "ceramide","glycerin","azelaic acid","panthenol","allantoin",
+    ]
+    resp, lat = call("post","/nlp/map/batch", json={"ingredients": names}); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    mapped = resp.json().get("data",{}).get("mapped",[])
+    resolved = sum(1 for m in mapped if m.get("confidence") in ("high","medium","low"))
+    rate = (resolved / max(len(names),1)) * 100.0
+    chk(rate >= 80.0, f"resolution rate {rate:.1f}% >= 80%", r)
+    ALL.append(r); return r
+
+
+def t43():
+    r = R_("T43"); _hdr("T43","GET","/health","CEP: all model statuses are loaded")
+    resp, lat = call("get","/health"); r.lat = lat
+    chk(resp.status_code == 200, "HTTP 200", r)
+    models = resp.json().get("models",{})
+    all_ready = all(v == "ready" for v in models.values()) if models else False
+    chk(all_ready, "all models == ready", r)
+    ALL.append(r); return r
+
+
+def t44():
+    r = R_("T44"); _hdr("T44","POST","/analyze/product","CEP: stress 50 sequential requests, no failures, p95")
+    payload = {
+        "product_name": "CEP Stress Product",
+        "ingredients": ["Niacinamide","Glycerin","Panthenol","Sodium Hyaluronate","Zinc PCA"],
+        "skin_profile": OILY_ACNE,
+        "include_llm": False,
+    }
+    lats_ms, failures = [], 0
+    for _ in range(50):
+        resp, lat = call("post","/analyze/product", json=payload)
+        lats_ms.append(lat * 1000)
+        if resp.status_code != 200:
+            failures += 1
+    r.lat = max(lats_ms)/1000 if lats_ms else 0
+    lats_ms.sort()
+    p95 = lats_ms[int(0.95 * len(lats_ms))] if lats_ms else 0
+    chk(failures == 0, f"no failures in 50 requests (failures={failures})", r)
+    _in(f"stress latency: avg={statistics.mean(lats_ms):.1f}ms  p95={p95:.1f}ms")
+    ALL.append(r); return r
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 
@@ -691,7 +831,7 @@ def main():
     print(f"{B}{C}{'='*70}{X}")
     print(f"  Target : {BASE}")
     print(f"  LLM    : {'ON — Gemini 2.5 Flash' if LLM else 'OFF  (pass --llm to enable)'}")
-    print(f"  Tests  : 35 across 9 endpoints\n")
+    print(f"  Tests  : 44 across 9 endpoints\n")
 
     tests = [
         ("T01",t01),("T02",t02),("T03",t03),("T04",t04),("T05",t05),("T06",t06),
@@ -700,6 +840,8 @@ def main():
         ("T19",t19),("T20",t20),("T21",t21),("T22",t22),("T23",t23),("T24",t24),
         ("T25",t25),("T26",t26),("T27",t27),("T28",t28),("T29",t29),("T30",t30),
         ("T31",t31),("T32",t32),("T33",t33),("T34",t34),("T35",t35),
+        ("T36",t36),("T37",t37),("T38",t38),("T39",t39),("T40",t40),
+        ("T41",t41),("T42",t42),("T43",t43),("T44",t44),
     ]
 
     skip_set = set(t.upper() for t in (args.skip or []))

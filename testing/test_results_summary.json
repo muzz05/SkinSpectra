@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-04-11 23:36:15",
+  "base_url": "http://127.0.0.1:8000",
+  "overall_passed": true,
+  "passed_count": 9,
+  "failed_count": 0,
+  "scenarios": [
+    {
+      "scenario": "single_product_oily_acne_5_ingredients",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 31.92,
+      "score": 80.7
+    },
+    {
+      "scenario": "single_product_sensitive_15_no_llm_under_500ms",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 15.16,
+      "score": 81.1
+    },
+    {
+      "scenario": "layering_retinol_aha_conflict",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 17.99,
+      "score": 0.8,
+      "conflict_detected": true
+    },
+    {
+      "scenario": "layering_niacinamide_hyaluronic_high",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 40.79,
+      "score": 80.9
+    },
+    {
+      "scenario": "ocr_clear_label_extract_ge_3",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 5236.39,
+      "extracted_count": 27
+    },
+    {
+      "scenario": "facial_oily_photo_valid_class",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 349.38,
+      "predicted_skin_type": "Oily"
+    },
+    {
+      "scenario": "nlp_batch_mapping_resolution_ge_80pct",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 8.4,
+      "resolution_rate_percent": 100.0
+    },
+    {
+      "scenario": "health_models_all_loaded",
+      "status_code": 200,
+      "passed": true,
+      "response_time_ms": 6.21,
+      "models": {
+        "nlp": "ready",
+        "calc": "ready",
+        "layering": "ready",
+        "llm": "ready",
+        "facial": "ready"
+      }
+    },
+    {
+      "scenario": "stress_50_sequential_product_requests",
+      "status_code": 200,
+      "passed": true,
+      "requests": 50,
+      "failures": 0,
+      "p95_latency_ms": 46.46,
+      "avg_latency_ms": 41.41
+    }
+  ]
+}
