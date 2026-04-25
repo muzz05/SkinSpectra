@@ -1,113 +1,115 @@
 {
-  "generated_at_epoch": 1775932891,
-  "source": "components/model_comparison.py",
+  "generated_at_epoch": 1777138818,
+  "source": "tools/generate_report_analysis.py",
+  "comparison_samples": 2500,
+  "comparison_seed": 42,
   "individual": {
     "task": "individual",
-    "samples": 800,
+    "samples": 2500,
     "random_seed": 42,
     "results": [
       {
         "model": "Linear Regression",
-        "mae": 2.2743,
-        "rmse": 3.0884,
-        "r2": 0.9464,
-        "train_time_s": 0.015,
-        "infer_us_per_sample": 4.27
-      },
-      {
-        "model": "Gradient Boosting (sklearn)",
-        "mae": 2.5324,
-        "rmse": 3.2271,
-        "r2": 0.9415,
-        "train_time_s": 0.561,
-        "infer_us_per_sample": 5.25
+        "mae": 2.5086,
+        "rmse": 3.0947,
+        "r2": 0.9462,
+        "train_time_s": 0.011,
+        "infer_us_per_sample": 1.82
       },
       {
         "model": "Random Forest",
-        "mae": 2.5355,
-        "rmse": 3.316,
-        "r2": 0.9382,
-        "train_time_s": 0.85,
-        "infer_us_per_sample": 109.08
+        "mae": 2.6359,
+        "rmse": 3.2256,
+        "r2": 0.9416,
+        "train_time_s": 5.127,
+        "infer_us_per_sample": 131.31
+      },
+      {
+        "model": "Gradient Boosting (sklearn)",
+        "mae": 2.6342,
+        "rmse": 3.2522,
+        "r2": 0.9406,
+        "train_time_s": 2.6,
+        "infer_us_per_sample": 4.64
       },
       {
         "model": "XGBoost (SkinSpectra)",
-        "mae": 3.0007,
-        "rmse": 3.8452,
-        "r2": 0.917,
-        "train_time_s": 0.44,
-        "infer_us_per_sample": 27.09
+        "mae": 2.8041,
+        "rmse": 3.5265,
+        "r2": 0.9302,
+        "train_time_s": 1.04,
+        "infer_us_per_sample": 11.39
       },
       {
         "model": "SVR (RBF)",
-        "mae": 4.2309,
-        "rmse": 6.3428,
-        "r2": 0.774,
-        "train_time_s": 0.049,
-        "infer_us_per_sample": 101.49
+        "mae": 3.4196,
+        "rmse": 4.6154,
+        "r2": 0.8804,
+        "train_time_s": 0.862,
+        "infer_us_per_sample": 527.07
       },
       {
         "model": "KNN (k=5)",
-        "mae": 7.3557,
-        "rmse": 9.2696,
-        "r2": 0.5174,
-        "train_time_s": 0.002,
-        "infer_us_per_sample": 13987.97
+        "mae": 5.965,
+        "rmse": 7.7089,
+        "r2": 0.6665,
+        "train_time_s": 0.003,
+        "infer_us_per_sample": 7093.66
       }
     ]
   },
   "layering": {
     "task": "layering",
-    "samples": 800,
+    "samples": 2500,
     "random_seed": 42,
     "results": [
       {
         "model": "Linear Regression",
-        "mae": 2.8341,
-        "rmse": 3.3885,
-        "r2": 0.9836,
-        "train_time_s": 0.011,
-        "infer_us_per_sample": 5.1
-      },
-      {
-        "model": "Random Forest",
-        "mae": 2.79,
-        "rmse": 3.4136,
-        "r2": 0.9833,
-        "train_time_s": 0.634,
-        "infer_us_per_sample": 118.73
+        "mae": 2.8882,
+        "rmse": 3.6573,
+        "r2": 0.9819,
+        "train_time_s": 0.022,
+        "infer_us_per_sample": 2.82
       },
       {
         "model": "Gradient Boosting (sklearn)",
-        "mae": 2.8231,
-        "rmse": 3.416,
-        "r2": 0.9833,
-        "train_time_s": 0.386,
-        "infer_us_per_sample": 4.78
+        "mae": 2.9522,
+        "rmse": 3.7114,
+        "r2": 0.9814,
+        "train_time_s": 1.81,
+        "infer_us_per_sample": 4.69
+      },
+      {
+        "model": "Random Forest",
+        "mae": 3.0532,
+        "rmse": 3.9039,
+        "r2": 0.9794,
+        "train_time_s": 3.641,
+        "infer_us_per_sample": 119.33
       },
       {
         "model": "LightGBM (SkinSpectra)",
-        "mae": 2.9637,
-        "rmse": 3.589,
-        "r2": 0.9816,
-        "train_time_s": 0.167,
-        "infer_us_per_sample": 41.29
+        "mae": 3.2474,
+        "rmse": 4.0422,
+        "r2": 0.9779,
+        "train_time_s": 0.859,
+        "infer_us_per_sample": 36.98
       },
       {
         "model": "SVR (RBF)",
-        "mae": 6.1816,
-        "rmse": 8.125,
-        "r2": 0.9056,
-        "train_time_s": 0.048,
-        "infer_us_per_sample": 105.53
+        "mae": 4.4937,
+        "rmse": 6.0394,
+        "r2": 0.9507,
+        "train_time_s": 0.725,
+        "infer_us_per_sample": 562.24
       },
       {
         "model": "KNN (k=5)",
-        "mae": 12.4219,
-        "rmse": 15.3731,
-        "r2": 0.6622,
-        "train_time_s": 0.002,
-        "infer_us_per_sample": 50.0
+        "mae": 13.0445,
+        "rmse": 15.4952,
+        "r2": 0.6757,
+        "train_time_s": 0.007,
+        "infer_us_per_sample": 49.21
       }
     ]
   }

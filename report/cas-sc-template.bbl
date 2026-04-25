@@ -1,0 +1,111 @@
+\begin{thebibliography}{13}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Article
+\bibitem[{Adegun and Viriri(2021)}]{adegun2021survey}
+\bibinfo{author}{Adegun, A.}, \bibinfo{author}{Viriri, S.},
+  \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{Deep learning techniques for skin lesion analysis and
+  melanoma cancer detection: A survey of state-of-the-art}.
+\newblock \bibinfo{journal}{Artificial Intelligence Review}
+  \bibinfo{volume}{54}, \bibinfo{pages}{811--841}.
+%Type = Article
+\bibitem[{Anil et~al.(2023)}]{anil2023gemini}
+\bibinfo{author}{Anil, R.}, et~al., \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Gemini: A family of highly capable multimodal
+  models}.
+\newblock \bibinfo{journal}{arXiv preprint arXiv:2312.11805} .
+%Type = Inproceedings
+\bibitem[{Brown et~al.(2020)Brown, Mann, Ryder, Subbiah, Kaplan, Dhariwal
+  et~al.}]{brown2020gpt3}
+\bibinfo{author}{Brown, T.}, \bibinfo{author}{Mann, B.},
+  \bibinfo{author}{Ryder, N.}, \bibinfo{author}{Subbiah, M.},
+  \bibinfo{author}{Kaplan, J.}, \bibinfo{author}{Dhariwal, P.}, et~al.,
+  \bibinfo{year}{2020}.
+\newblock \bibinfo{title}{Language models are few-shot learners}, in:
+  \bibinfo{booktitle}{Advances in Neural Information Processing Systems}, pp.
+  \bibinfo{pages}{1877--1901}.
+%Type = Inproceedings
+\bibitem[{Chen and Guestrin(2016)}]{chen2016xgboost}
+\bibinfo{author}{Chen, T.}, \bibinfo{author}{Guestrin, C.},
+  \bibinfo{year}{2016}.
+\newblock \bibinfo{title}{Xgboost: A scalable tree boosting system}, in:
+  \bibinfo{booktitle}{Proceedings of the 22nd ACM SIGKDD International
+  Conference on Knowledge Discovery and Data Mining}, pp.
+  \bibinfo{pages}{785--794}.
+%Type = Article
+\bibitem[{Johnson et~al.(2021)Johnson, Douze and J{\'e}gou}]{johnson2021faiss}
+\bibinfo{author}{Johnson, J.}, \bibinfo{author}{Douze, M.},
+  \bibinfo{author}{J{\'e}gou, H.}, \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{Billion-scale similarity search with gpus}.
+\newblock \bibinfo{journal}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence} \bibinfo{volume}{43}, \bibinfo{pages}{2062--2075}.
+%Type = Inproceedings
+\bibitem[{Ke et~al.(2017)Ke, Meng, Finley, Wang, Chen, Ma, Ye and
+  Liu}]{ke2017lightgbm}
+\bibinfo{author}{Ke, G.}, \bibinfo{author}{Meng, Q.}, \bibinfo{author}{Finley,
+  T.}, \bibinfo{author}{Wang, T.}, \bibinfo{author}{Chen, W.},
+  \bibinfo{author}{Ma, W.}, \bibinfo{author}{Ye, Q.}, \bibinfo{author}{Liu,
+  T.Y.}, \bibinfo{year}{2017}.
+\newblock \bibinfo{title}{Lightgbm: A highly efficient gradient boosting
+  decision tree}, in: \bibinfo{booktitle}{Advances in Neural Information
+  Processing Systems}.
+%Type = Article
+\bibitem[{Kim et~al.(2022)}]{kim2022personalized}
+\bibinfo{author}{Kim, E.J.}, et~al., \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Machine learning approach for personalized skincare
+  recommendation systems}.
+\newblock \bibinfo{journal}{International Journal of Cosmetic Science}
+  \bibinfo{volume}{44}, \bibinfo{pages}{289--301}.
+%Type = Article
+\bibitem[{Liu et~al.(2022)}]{liu2022skintype}
+\bibinfo{author}{Liu, Y.}, et~al., \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Deep learning-based skin type classification in
+  cosmetic dermatology}.
+\newblock \bibinfo{journal}{Journal of Cosmetic Dermatology}
+  \bibinfo{volume}{21}, \bibinfo{pages}{2445--2453}.
+%Type = Article
+\bibitem[{Park et~al.(2024)}]{park2024transformer}
+\bibinfo{author}{Park, J.}, et~al., \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Transformer-based models for cosmetic ingredient
+  safety assessment}.
+\newblock \bibinfo{journal}{PLOS ONE} \bibinfo{volume}{19},
+  \bibinfo{pages}{e0298712}.
+%Type = Inproceedings
+\bibitem[{Reimers and Gurevych(2019)}]{reimers2019sentencebert}
+\bibinfo{author}{Reimers, N.}, \bibinfo{author}{Gurevych, I.},
+  \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Sentence-bert: Sentence embeddings using siamese
+  bert-networks}, in: \bibinfo{booktitle}{Proceedings of EMNLP-IJCNLP}, pp.
+  \bibinfo{pages}{3982--3992}.
+%Type = Article
+\bibitem[{Shetty et~al.(2023)}]{shetty2023ai}
+\bibinfo{author}{Shetty, B.S.}, et~al., \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Artificial intelligence in cosmetic dermatology:
+  Current applications and future prospects}.
+\newblock \bibinfo{journal}{Dermatology and Therapy} \bibinfo{volume}{13},
+  \bibinfo{pages}{15--29}.
+%Type = Article
+\bibitem[{Tan and Le(2021)}]{tan2021efficientnetv2}
+\bibinfo{author}{Tan, M.}, \bibinfo{author}{Le, Q.}, \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{Efficientnetv2: Smaller models and faster training}.
+\newblock \bibinfo{journal}{arXiv preprint arXiv:2104.00298} .
+%Type = Article
+\bibitem[{Zhao et~al.(2023)}]{zhao2023ingredient}
+\bibinfo{author}{Zhao, R.}, et~al., \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Ingredient-level skin compatibility prediction using
+  graph neural networks}.
+\newblock \bibinfo{journal}{Computers in Biology and Medicine}
+  \bibinfo{volume}{165}, \bibinfo{pages}{107420}.
+
+\end{thebibliography}

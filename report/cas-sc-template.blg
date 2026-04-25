@@ -1,48 +1,51 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: cas-sc-template.aux
-I found no \citation commands---while reading file cas-sc-template.aux
-I found no \bibdata command---while reading file cas-sc-template.aux
-I found no \bibstyle command---while reading file cas-sc-template.aux
-You've used 0 entries,
-            0 wiz_defined-function locations,
-            83 strings with 504 characters,
-and the built_in function-call counts, 0 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 0
-:= -- 0
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
-chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 0
-format.name$ -- 0
-if$ -- 0
-int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 0
-num.names$ -- 0
-pop$ -- 0
-preamble$ -- 0
-purify$ -- 0
+Reallocating 'name_of_file' (item size: 1) to 17 items.
+The style file: cas-model2-names.bst
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+Database file #1: cas-refs.bib
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Warning--empty pages in ke2017lightgbm
+You've used 13 entries,
+            2990 wiz_defined-function locations,
+            813 strings with 8468 characters,
+and the built_in function-call counts, 9032 in all, are:
+= -- 724
+> -- 330
+< -- 13
++ -- 127
+- -- 114
+* -- 933
+:= -- 1305
+add.period$ -- 35
+call.type$ -- 13
+change.case$ -- 96
+chr.to.int$ -- 13
+cite$ -- 14
+duplicate$ -- 683
+empty$ -- 667
+format.name$ -- 167
+if$ -- 1726
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 124
+newline$ -- 76
+num.names$ -- 52
+pop$ -- 235
+preamble$ -- 1
+purify$ -- 83
 quote$ -- 0
-skip$ -- 0
+skip$ -- 233
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 428
+swap$ -- 468
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 0
+type$ -- 117
+warning$ -- 1
+while$ -- 60
 width$ -- 0
-write$ -- 0
-(There were 3 error messages)
+write$ -- 189
+(There was 1 warning)

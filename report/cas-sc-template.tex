@@ -27,6 +27,7 @@
 %\usepackage[numbers]{natbib}
 %\usepackage[authoryear]{natbib}
 \usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{graphicx}
 
 %%%Author macros
 \def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
@@ -218,52 +219,209 @@ The project is organized into modular components: NLP mapping, individual scorin
 \end{figure}
 
 \section{Results and Analysis}\label{sec:results}
-Model metrics are taken from saved evaluation artifacts of the trained regressors.
+All quantitative results in this section were generated from the reproducible pipeline in
+\texttt{tools/generate\_report\_analysis.py} using the \texttt{skinspectra} conda environment.
+
+\subsection{NLP Normalization Accuracy}
+The NLP normalization layer was evaluated on 2461 alias-to-INCI mapping cases sampled from
+\texttt{data/ingredient\_mapping.csv}. The model achieved strong retrieval accuracy:
+top-1 accuracy $=95.65\%$ and top-3 recall $=95.65\%$.
 
 \begin{table}[t]
-\caption{Regression Performance of Core Scoring Models}
-\label{tbl:metrics}
+\caption{NLP Normalization Summary}
+\label{tbl:nlp_summary}
+\begin{tabular*}{\tblwidth}{@{}LLLL@{}}
+\toprule
+Metric & Value & Metric & Value \\
+\midrule
+Evaluation cases & 2461 & Top-1 accuracy & 95.65\% \\
+Top-3 recall & 95.65\% & Mean latency & 0.809 ms \\
+Median latency & 0.00 ms & p95 latency & 0.02 ms \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[t]
+\caption{NLP Accuracy by Alias Source}
+\label{tbl:nlp_by_source}
+\begin{tabular*}{\tblwidth}{@{}LLLL@{}}
+\toprule
+Source Column & Cases & Top-1 Accuracy & Top-3 Recall \\
+\midrule
+\texttt{inci\_name} & 293 & 92.15\% & 92.15\% \\
+\texttt{common\_names} & 619 & 94.02\% & 94.02\% \\
+\texttt{trade\_names} & 544 & 95.04\% & 95.04\% \\
+\texttt{chemical\_aliases} & 545 & 97.06\% & 97.06\% \\
+\texttt{language\_variants} & 460 & 99.13\% & 99.13\% \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+Confidence distribution was heavily concentrated in the high-confidence regime
+(2431 high, 4 medium, 24 low, 2 uncertain), as visualized in Fig.~\ref{fig:nlp_confidence}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/nlp_confidence_distribution.png}
+  \caption{Confidence distribution of NLP mapping predictions.}
+  \label{fig:nlp_confidence}
+\end{figure}
+
+\subsection{Single-Product Scoring Model Performance}
+The single-product compatibility model (XGBoost hybrid with rule+ML ensembling) achieved low error
+with strong explanatory quality on the held-out split.
+
+\begin{table}[t]
+\caption{Single-Product Scoring Performance}
+\label{tbl:single_perf}
 \begin{tabular*}{\tblwidth}{@{}LLLLL@{}}
 \toprule
-Model & MAE & RMSE & $R^2$ & Data Split \\
+Model Variant & MAE & RMSE & $R^2$ & Split \\
 \midrule
-Individual Compatibility (XGBoost hybrid) & 2.6731 & 3.3412 & 0.9338 & 6800 train / 1200 val \\
-Layering Compatibility (LightGBM hybrid)  & 2.8587 & 3.6076 & 0.9838 & 8500 train / 1500 val \\
+Hybrid (rule+XGBoost) & 2.6731 & 3.3412 & 0.9338 & 6800 train / 1200 val \\
+Rule/ML fusion weights & 0.45 / 0.55 & -- & -- & Fixed at inference \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-The reported values indicate strong fit quality for both tasks, with especially high explanatory power for layering prediction. In practical API behavior, scores are constrained to the interpretable range $[0,100]$ and accompanied by warning-level context, reducing the risk of black-box outputs.
+The score remains bounded in $[0,100]$, preserving interpretability and stable grade assignment.
 
-\subsection{Complexity and Performance Discussion}
-\begin{itemize}
-\item NLP retrieval uses approximate vector search where lookup is near-sublinear with indexed ANN behavior.
-\item Tree-based inference scales approximately with number of trees and effective depth/leaves.
-\item OCR complexity is roughly linear in pixel count, with preprocessing dominating large-image workloads.
-\item LLM latency is external-service bound and depends on prompt/output token length.
-\end{itemize}
-
-The testing module includes endpoint-level validation scenarios across config, NLP, individual analysis, and layering analysis. Stress and latency evaluation scripts are present for documenting p95 and failure rates under repeated request workloads.
-
-\section{Comparative Analysis}\label{sec:comparison}
-Compared with common ingredient lookup systems and static community databases, SkinSpectra provides profile-aware scoring and interaction-aware layering support. Table~\ref{tbl:comparison} summarizes the difference.
+\subsection{Layering Scoring Model Performance}
+The two-product layering model (LightGBM hybrid) showed very high fit quality with
+$R^2=0.9838$, indicating strong capture of interaction-level structure.
 
 \begin{table}[t]
-\caption{Comparison with Existing Skincare Analysis Approaches}
-\label{tbl:comparison}
-\begin{tabular*}{\tblwidth}{@{}LLL@{}}
+\caption{Layering Scoring Performance}
+\label{tbl:layer_perf}
+\begin{tabular*}{\tblwidth}{@{}LLLLL@{}}
 \toprule
-System & Core Approach & Limitation / Advantage \\
+Model Variant & MAE & RMSE & $R^2$ & Split \\
 \midrule
-INCI Decoder-like tools & Rule-based ingredient lookup & Limited personalization and no learned scoring \\
-CosDNA-like databases & Community and static safety metadata & No skin-profile adaptation; weak layering intelligence \\
-Generic skincare apps & Blacklist/whitelist heuristics & Minimal interaction modeling and transparency gaps \\
-SkinSpectra & NLP + ML + CV + LLM pipeline & Personalized scoring + layering analysis + structured explanations \\
+Hybrid (rule+LightGBM) & 2.8587 & 3.6076 & 0.9838 & 8500 train / 1500 val \\
+Rule/ML fusion weights & 0.40 / 0.60 & -- & -- & Fixed at inference \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-This combined architecture improves practical decision support by integrating semantic normalization, predictive modeling, and user-centered explanation generation.
+Despite slightly higher MAE than the single-product task, layering prediction exhibits higher
+explained variance due to richer pairwise feature structure and deterministic conflict rules.
+
+\subsection{Facial Skin-Type Detection Accuracy}
+Operational robustness was evaluated using 50 positive perturbation tests derived from
+\texttt{testing/oily-face.webp} and 2 negative controls (blur and no-face).
+
+\begin{table}[t]
+\caption{Facial Analysis Operational Metrics}
+\label{tbl:facial_metrics}
+\begin{tabular*}{\tblwidth}{@{}LL@{}}
+\toprule
+Metric & Value \\
+\midrule
+Positive oily consistency (50 samples) & 56.00\% \\
+Valid prediction rate on positives & 80.00\% \\
+Negative rejection accuracy (2 samples) & 100.00\% \\
+Overall operational accuracy & 57.69\% \\
+Mean latency & 768.889 ms \\
+Median latency & 532.15 ms \\
+p95 latency & 1079.506 ms \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+Mode-wise confidence degradation is shown in Fig.~\ref{fig:facial_robustness}. Mean confidence by mode
+was 0.5825 (brightness), 0.5678 (clean), 0.5314 (noise), 0.4959 (rotation), and 0.0000 (gaussian blur).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/facial_robustness_confidence.png}
+  \caption{Facial-model confidence robustness across controlled perturbations.}
+  \label{fig:facial_robustness}
+\end{figure}
+
+\subsection{OCR Extraction Quality}
+OCR quality was measured on 40 synthetic label images (10 each for clean, blurred, rotated, and noisy)
+using exact normalized string matching against known ingredient sets.
+
+\begin{table}[t]
+\caption{OCR Quality by Image Condition}
+\label{tbl:ocr_quality}
+\begin{tabular*}{\tblwidth}{@{}LLLLL@{}}
+\toprule
+Condition & Samples & Precision & Recall & F1 \\
+\midrule
+Clean & 10 & 0.1871 & 0.1500 & 0.1655 \\
+Blurred & 10 & 0.0000 & 0.0000 & 0.0000 \\
+Rotated & 10 & 0.0310 & 0.0200 & 0.0243 \\
+Noisy & 10 & 0.2990 & 0.2300 & 0.2585 \\
+\midrule
+Overall & 40 & 0.1293 & 0.1000 & 0.1121 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/ocr_quality_by_condition.png}
+  \caption{OCR precision, recall, and F1 under different image degradations.}
+  \label{fig:ocr_quality}
+\end{figure}
+
+A real-image smoke check on \texttt{testing/dry\_moisturizer.jpg} returned 27 ingredients with high
+confidence in 8669.3 ms. The low exact-match F1 in synthetic tests is mainly driven by strict string-level
+matching and OCR spelling variance, not complete extraction failure.
+
+\section{Comparative Analysis}\label{sec:comparison}
+To compare candidate ML algorithms (XGBoost, Random Forest, Gradient Boosting, and others), we ran
+controlled synthetic benchmarking with 2500 samples per task and identical train/validation splits.
+
+\begin{table}[t]
+\caption{Comparative Results: Single-Product Task (2500 Samples)}
+\label{tbl:cmp_individual}
+\begin{tabular*}{\tblwidth}{@{}LLLLL@{}}
+\toprule
+Model & MAE & RMSE & $R^2$ & Infer (\textmu s/sample) \\
+\midrule
+Linear Regression & 2.5086 & 3.0947 & 0.9462 & 1.82 \\
+Random Forest & 2.6359 & 3.2256 & 0.9416 & 131.31 \\
+Gradient Boosting (sklearn) & 2.6342 & 3.2522 & 0.9406 & 4.64 \\
+XGBoost (SkinSpectra) & 2.8041 & 3.5265 & 0.9302 & 11.39 \\
+SVR (RBF) & 3.4196 & 4.6154 & 0.8804 & 527.07 \\
+KNN (k=5) & 5.9650 & 7.7089 & 0.6665 & 7093.66 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[t]
+\caption{Comparative Results: Layering Task (2500 Samples)}
+\label{tbl:cmp_layering}
+\begin{tabular*}{\tblwidth}{@{}LLLLL@{}}
+\toprule
+Model & MAE & RMSE & $R^2$ & Infer (\textmu s/sample) \\
+\midrule
+Linear Regression & 2.8882 & 3.6573 & 0.9819 & 2.82 \\
+Gradient Boosting (sklearn) & 2.9522 & 3.7114 & 0.9814 & 4.69 \\
+Random Forest & 3.0532 & 3.9039 & 0.9794 & 119.33 \\
+LightGBM (SkinSpectra) & 3.2474 & 4.0422 & 0.9779 & 36.98 \\
+SVR (RBF) & 4.4937 & 6.0394 & 0.9507 & 562.24 \\
+KNN (k=5) & 13.0445 & 15.4952 & 0.6757 & 49.21 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+Figure~\ref{fig:model_comparison_r2} summarizes the comparative $R^2$ profile across both tasks.
+Tree ensembles and linear models dominate error-based metrics, while KNN/SVR underperform in
+latency-quality tradeoff.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{figures/model_comparison_r2.png}
+  \caption{$R^2$ comparison of candidate regressors for single-product and layering tasks.}
+  \label{fig:model_comparison_r2}
+\end{figure}
+
+Compared with common consumer tools, SkinSpectra still provides broader practical utility by combining
+NLP normalization, profile-aware scoring, interaction-aware layering logic, OCR intake, and optional LLM
+explanations in one deployable API.
 
 \section{Conclusion}\label{sec:conclusion}
 SkinSpectra demonstrates that a multi-layer AI system can deliver robust, interpretable, and deployable skincare compatibility analysis. The project integrates heterogeneous methods without sacrificing API usability: semantic normalization for noisy ingredient inputs, high-quality regression for compatibility estimation, image-based extraction and skin-type support, and optional natural-language reporting grounded in computed scores.

@@ -1,17 +1,20 @@
 # Fdb version 4
-["bibtex cas-sc-template"] 1775931612.96426 "cas-sc-template.aux" "cas-sc-template.bbl" "cas-sc-template" 1775931614.04472 2
+["bibtex cas-sc-template"] 1777139434.48547 "cas-sc-template.aux" "cas-sc-template.bbl" "cas-sc-template" 1777139452.67323 0
   "./cas-refs.bib" 1775931609 8113 f412151eac2039fc34f381cfb37d82da ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/bibtex/bst/els-cas-templates/cas-model2-names.bst" 1715332323 31802 28b630660245c09f173aac55be552b29 ""
-  "cas-sc-template.aux" 1775931612 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "cas-sc-template.aux" 1777139447 7648 954991b05250e18a01771f7502b94e70 "pdflatex"
   (generated)
   "cas-sc-template.bbl"
   "cas-sc-template.blg"
   (rewritten before read)
-["pdflatex"] 1775931209.87566 "a:/Coding/AI/SkinSpectra/report/cas-sc-template.tex" "cas-sc-template.pdf" "cas-sc-template" 1775931217.93538 2
+["pdflatex"] 1777139436.17344 "cas-sc-template.tex" "cas-sc-template.pdf" "cas-sc-template" 1777139452.67655 2
   "C:/Users/muzam/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1775931154 84470 1b03f303430b1250744b51ca4bdbdd0b ""
   "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecss0900.pk" 1775931169 17932 ae6c799d118575903be7da54d87c78a7 ""
   "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecsx0900.pk" 1775931164 18372 961eaa3f014dd23444cde0de7b6c7a92 ""
   "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0800.pk" 1775931190 15192 3dc8bfd5698fe97bed3201e18e991e4f ""
+  "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0900.pk" 1777139261 17512 b483658e17ea65870cd46bbcb7394be4 ""
+  "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1000.pk" 1777139268 20028 1b67bff65d73a5cdf0c50d9ff0bb299a ""
+  "C:/Users/muzam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcss0900.pk" 1777139252 9548 11b41a225f0cf48d028c5db2c0ff5df3 ""
   "C:/Users/muzam/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1738505279 12017794 64182d738046d1a5e38fe4c66de46bf7 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-t1.enc" 1356261742 7013 c55cc8669071ac14036c4a0c96c16202 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/stix/stix-ts1.enc" 1356261742 2836 154e6b0061f9b8cb549144b55b268339 ""
@@ -20,6 +23,9 @@
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ecss1000.tfm" 993062234 3140 7eb06dfefee71119860002af13820d26 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ecsx0900.tfm" 993062272 3160 ebf5076c2772cc0b2af30126a72da1c2 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt0800.tfm" 993062338 1348 ad6a25e9916b0e5ddfcc7ffcb8d43448 ""
+  "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt0900.tfm" 993062338 1348 c9911882a95d2c1b82f0cccb2c651de8 ""
+  "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ectt1000.tfm" 993062340 1348 d70ddf2d5d512b838e50a335e385e919 ""
+  "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/tcss0900.tfm" 993062536 1464 8e132ad4cbb9cb67b56ad200db0c8f0c ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1233951854 916 f87d7c45f9c908e672703b83b72241a3 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1233951854 924 9904cf1d39e9767e7a3622f2a125a565 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam7.tfm" 1233951854 928 2dc8d444221b7a635bb58038579b861a ""
@@ -144,12 +150,15 @@
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/svgnam.def" 1729265222 4705 34614fec2d4cfd7794c82198c9076871 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/muzam/AppData/Local/Programs/MiKTeX/tex/latex/xstring/xstring.sty" 1693735632 123 a302f2c651a95033260db60e51527ae8 ""
-  "a:/Coding/AI/SkinSpectra/report/cas-sc-template.tex" 1775930913 16859 84b728c7776b7a927fd9b6c11f19c63b ""
-  "cas-sc-template.abs" 1775931212 1235 17a35a1264d619abc67895881724f7de "pdflatex"
-  "cas-sc-template.aux" 1775931612 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "cas-sc-template.bbl" 1775931613 0 d41d8cd98f00b204e9800998ecf8427e "bibtex cas-sc-template"
-  "cas-sc-template.out" 0 -1 0 "pdflatex"
-  "cas-sc-template.tex" 1775930913 16859 84b728c7776b7a927fd9b6c11f19c63b ""
+  "cas-sc-template.abs" 1777139442 1235 17a35a1264d619abc67895881724f7de "pdflatex"
+  "cas-sc-template.aux" 1777139447 7648 954991b05250e18a01771f7502b94e70 "pdflatex"
+  "cas-sc-template.bbl" 1777139435 5538 bb2bfd331df0ea3574f77cf97c33b24b "bibtex cas-sc-template"
+  "cas-sc-template.out" 1777139442 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "cas-sc-template.tex" 1777139225 21829 e9e72399b239e8fae4f2c6ffe51d7532 ""
+  "figures/facial_robustness_confidence.png" 1777139037 43817 6717b52c08c7a32d83dd2d7be4639c2e ""
+  "figures/model_comparison_r2.png" 1777139037 88066 bc9cdeb8fd329b86255a21c98fc7a9d1 ""
+  "figures/nlp_confidence_distribution.png" 1777139036 31157 6b3e9b626ee5137e5157d5fdb9c5c77c ""
+  "figures/ocr_quality_by_condition.png" 1777139038 35844 abfab326c498543c03c5d71b34ecbb4b ""
   "thumbnails/cas-email.jpeg" 0 -1 0 ""
   "thumbnails/cas-url.jpeg" 0 -1 0 ""
   (generated)
