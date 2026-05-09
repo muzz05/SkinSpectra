@@ -88,10 +88,14 @@ OCR_CORRECTIONS = {
     r"\bVit\. E\b"       : "Vitamin E",
     r"\bVit\. C\b"       : "Vitamin C",
     # truncated words from line-edge cropping
-    r"(?<![A-Za-z])zophenone\b" : "Benzophenone",
-    r"(?<![A-Za-z])phenone\b"   : "Benzophenone",
-    r"(?<![A-Za-z])oxybenzone\b": "Oxybenzone",
-    r"\bHydrox[yY]b\b"          : "Hydroxybenzoic",
+    r"(?<![A-Za-z])zophenone\b"         : "Benzophenone",
+    r"(?<![A-Za-z])phenone\b"           : "Benzophenone",
+    r"(?<![A-Za-z])oxybenzone\b"        : "Oxybenzone",
+    r"\bHydrox[yY]b\b"                  : "Hydroxybenzoic",
+    # Zinc Oxide common misreadings (O↔0, l↔i, Z↔2)
+    r"\b[Z2][il1]?nc\s+[O0]x[il1]de\b" : "Zinc Oxide",
+    r"\bZinc\s+[O0]x[il1]de\b"         : "Zinc Oxide",
+    r"\bZnO\b"                           : "Zinc Oxide",
     # spacing issues
     r"([a-z])([A-Z][a-z])" : r"\1 \2",     # camelCase split e.g. CaprylylGlycol
 }
@@ -134,8 +138,11 @@ NON_INGREDIENT_WORDS = {
     "disclaimer", "warning", "caution", "note", "notes",
     "contact", "company", "manufactured", "distributed", "imported",
     "www", "com", "net", "org",
-    # Single generic chemistry words that are never a complete ingredient on their own
+    # Single generic words that are never a complete ingredient on their own
     "acid", "oxide", "extract", "oil", "water", "alcohol",
+    # "Vitamin" alone means OCR truncated "Vitamin B3/C/E" — filter to avoid
+    # the NLP misidentifying it as Retinol/Vitamin A which wrecks the score
+    "vitamin",
 }
 
 # =============================================================================
@@ -729,6 +736,23 @@ class OCRHandler:
         corrected_text             = TextPostprocessor.correct_ocr_errors(raw_text)
         ingredients, post_warnings = self.postprocessor.process(raw_text)
         warnings.extend(post_warnings)
+
+        # 3b. Context-aware ingredient recovery
+        # Zinc Oxide almost always appears paired with Titanium Dioxide on sunscreen labels
+        # (e.g. "Titanium Dioxide & Zinc Oxide"). If Titanium Dioxide was extracted but
+        # Zinc Oxide was not, check the raw text for the "&" pairing pattern.
+        ing_lower = {i.lower() for i in ingredients}
+        if "titanium dioxide" in ing_lower and "zinc oxide" not in ing_lower:
+            if re.search(
+                r"titanium.{0,40}&.{0,30}(?:zinc|zn\b|z[il1]nc)",
+                raw_text, re.IGNORECASE,
+            ):
+                ingredients.append("Zinc Oxide")
+                warnings.append(
+                    "Zinc Oxide auto-recovered: '& Zinc Oxide' pattern detected "
+                    "near Titanium Dioxide but was garbled by OCR."
+                )
+                log.info("Zinc Oxide auto-recovered via context rule")
 
         # 4. Confidence estimate
         confidence = estimate_confidence(raw_text, ingredients)
