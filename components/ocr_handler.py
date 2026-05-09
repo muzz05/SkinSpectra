@@ -87,6 +87,11 @@ OCR_CORRECTIONS = {
     r"\bVitB\b"          : "Vitamin B",
     r"\bVit\. E\b"       : "Vitamin E",
     r"\bVit\. C\b"       : "Vitamin C",
+    # truncated words from line-edge cropping
+    r"(?<![A-Za-z])zophenone\b" : "Benzophenone",
+    r"(?<![A-Za-z])phenone\b"   : "Benzophenone",
+    r"(?<![A-Za-z])oxybenzone\b": "Oxybenzone",
+    r"\bHydrox[yY]b\b"          : "Hydroxybenzoic",
     # spacing issues
     r"([a-z])([A-Z][a-z])" : r"\1 \2",     # camelCase split e.g. CaprylylGlycol
 }
@@ -106,7 +111,8 @@ NOISE_PATTERNS = [
     r"CI\s*\d{5,}",                    # CI colour codes (CI 77891)
     r"^\d+[\.,]\d*\s*%",               # concentrations: 10.0%
     r"^[\d\s\.]+%$",
-    r"^[\*†‡§¶•◦▪▸\-–—]+$",           # stray bullet/dash lines
+    r"^[\*†‡§¶•◦▪▸\-–—«»|]+$",         # stray bullet/dash/pipe lines
+    r"^[a-z]{1,2}(\s+[a-z]{1,2})+$",   # repeated tiny lowercase noise: "ae ae"
     r"^\s*[\(\[\{][\)\]\}]\s*$",       # empty brackets
     r"^(www\.|http|@)",                # URLs / handles
     r"Lot\s*No",
@@ -128,6 +134,8 @@ NON_INGREDIENT_WORDS = {
     "disclaimer", "warning", "caution", "note", "notes",
     "contact", "company", "manufactured", "distributed", "imported",
     "www", "com", "net", "org",
+    # Single generic chemistry words that are never a complete ingredient on their own
+    "acid", "oxide", "extract", "oil", "water", "alcohol",
 }
 
 # =============================================================================
@@ -322,8 +330,29 @@ class TextPostprocessor:
         # Join hyphenated line-breaks (common in narrow labels)
         text = re.sub(r"-\s*\n\s*", "", text)
 
+        # Rejoin vitamin names split across lines: "Vitamin\nB3" → "Vitamin B3"
+        # Also catches "B 3" spacing: Vitamin\nB 3 → Vitamin B3
+        text = re.sub(
+            r"\b(Vitamin)\s*\n\s*([A-Za-z]\s*[0-9]?)\b",
+            lambda m: m.group(1) + " " + re.sub(r"\s+", "", m.group(2)),
+            text, flags=re.IGNORECASE,
+        )
+
         # Replace semicolons with commas (some labels use semicolons)
         text = text.replace(";", ",")
+
+        # Replace OCR-misread bullet separators («, », ·) with commas
+        text = re.sub(r"\s*[«»·]\s*", ", ", text)
+
+        # Replace " * " used as bullet separator between ingredients (not percentages)
+        # Lookahead covers digits too: "Niacinamide * 2-Hydroxybenzoic Acid"
+        text = re.sub(r"(?<=[A-Za-z])\s*\*\s*(?=[A-Z0-9])", ", ", text)
+
+        # Replace "&" between words as a list separator
+        text = re.sub(r"\s+&\s+(?=\S)", ", ", text)
+
+        # Fix "Titanium di oxide" / "Titanium di Oxide" spacing
+        text = re.sub(r"\bTitanium\s+di[- ]?[Oo]xide\b", "Titanium Dioxide", text)
 
         # Split on comma or newline — but not inside parentheses
         tokens = []
@@ -372,9 +401,14 @@ class TextPostprocessor:
         Preserves parenthetical INCI synonyms.
         """
         # Strip leading/trailing punctuation (not inside parens)
-        t = re.sub(r"^[\s\*†‡•◦▪▸\-–—:;,\.]+", "", token)
-        t = re.sub(r"[\s\*†‡•◦▪▸\-–—:;,\.]+$", "", t)
+        t = re.sub(r"^[\s\*†‡•◦▪▸\-–—:;,\.\|«»]+", "", token)
+        t = re.sub(r"[\s\*†‡•◦▪▸\-–—:;,\.\|«»]+$", "", t)
         t = t.strip()
+
+        # Strip 1-3 char stray prefix before a capitalised ingredient word.
+        # Catches ASCII lowercase AND Unicode bullet-lookalikes OCR misreads as letters.
+        # e.g. "c Zinc PCA" → "Zinc PCA",  "ae Tea Tree" → "Tea Tree"
+        t = re.sub(r"^[^A-Z0-9(]{1,3}\s+(?=[A-Z][a-z])", "", t)
 
         # Strip leading "Ingredients:" / "INGREDIENTS:" / "INCI:" header prefix
         # that OCR sometimes fuses with the first ingredient on the same line
